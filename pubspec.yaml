@@ -1,0 +1,109 @@
+name: bazrin
+description: "A new Flutter project."
+
+  
+publish_to: 'none' 
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  skeletonizer: ^2.1.0+1
+  flutter_native_splash: ^2.4.6
+  flutter_riverpod: ^3.0.3
+  google_fonts: ^6.3.2
+  hive_flutter: ^1.1.0
+  hive: ^2.2.3
+  icons_plus: ^5.0.0
+  flutter_svg: ^2.2.1
+  fl_chart: ^1.1.1
+  hugeicons: ^1.1.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^5.0.0
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+   - assets/images/splashicon.png
+   - assets/images/bazrinlogo.png
+   - assets/images/user.svg
+   - assets/images/icons/google.png
+   - assets/images/icons/fb.png
+   - assets/images/icons/wa.png
+   - assets/images/icons/google.png
+   - assets/images/icons/face.svg
+   - assets/images/icons/finger.svg
+   - assets/images/icons/drawer.svg
+   - assets/images/icons/box.svg
+   - assets/images/icons/produckbox.svg
+   - assets/images/icons/handshake.svg
+   - assets/images/icons/due.svg
+   - assets/images/icons/grow.svg
+   - assets/images/icons/growline.svg
+   - assets/images/icons/deshboard.svg
+   - assets/images/icons/suppliers.svg
+   - assets/images/icons/customar.svg
+   - assets/images/icons/product.svg
+   - assets/images/icons/purchases.svg
+   - assets/images/icons/sales.svg
+   - assets/images/icons/quotation.svg
+   - assets/images/icons/account.svg
+   - assets/images/icons/expense.svg
+   - assets/images/icons/role.svg
+   - assets/images/icons/filter.svg
+   - assets/images/icons/staff.svg
+   - assets/images/icons/promotion.svg
+   - assets/images/icons/settings.svg
+   - assets/images/
+  #   - images/a_dot_ham.jpeg
+
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/to/resolution-aware-images
+
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.dev/to/asset-from-package
+
+  # To add custom fonts to your application, add a fonts section here,
+  # in this "flutter" section. Each entry in this list should have a
+  # "family" key with the font family name, and a "fonts" key with a
+  # list giving the asset and other descriptors for the font. For
+  # example:
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
+  #   - family: Trajan Pro
+  #     fonts:
+  #       - asset: fonts/TrajanPro.ttf
+  #       - asset: fonts/TrajanPro_Bold.ttf
+  #         weight: 700
+  #
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/to/font-from-package
+flutter_native_splash:
+  android: true
+  ios: true
+  web: false
+  color: "#0D7D4C"
+  image: assets/images/bazrinlogo.png
+  android_gravity: center
+  fullscreen: true
+
+  android_12:
+
+    color: "#0D7D4C"
+
+    
