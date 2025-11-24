@@ -23,6 +23,23 @@ dependencies:
   flutter_svg: ^2.2.1
   fl_chart: ^1.1.1
   hugeicons: ^1.1.1
+  dotted_border: ^3.1.0
+  image_picker: ^1.2.0
+  flutter_quill: ^11.5.0
+  permission_handler: ^12.0.1
+  dropdown_search: ^6.0.2
+  dio: ^5.9.0
+  intl_phone_number_input: ^0.7.5
+  file_picker: ^10.3.3
+  flutter_gradient_text: ^1.0.1
+  flutter_dotenv: ^6.0.0
+  number_to_words: ^1.0.0
+  drop_down_search_field: ^1.2.2
+  toastification: ^3.0.3
+  flutter_quill_delta_from_html: ^1.5.3
+  vsc_quill_delta_to_html: ^1.0.5
+  currency_picker: ^2.0.21
+  barcode: ^2.2.9
 
 dev_dependencies:
   flutter_test:
@@ -65,7 +82,14 @@ flutter:
    - assets/images/icons/staff.svg
    - assets/images/icons/promotion.svg
    - assets/images/icons/settings.svg
+   - assets/images/icons/give.svg
+   - assets/images/icons/take.svg
+   - assets/images/icons/date.svg
+   - assets/images/icons/takesmall.svg
+   - assets/images/icons/3bar.svg
+   - assets/images/icons/barcode.svg
    - assets/images/
+   - .env
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

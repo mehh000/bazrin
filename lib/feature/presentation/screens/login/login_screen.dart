@@ -1,11 +1,4 @@
-import 'package:bazrin/feature/presentation/common/classes/SlidePageRoute.dart';
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
-import 'package:bazrin/feature/presentation/common/widgets/buttonEv.dart';
-import 'package:bazrin/feature/presentation/common/widgets/inputContainer.dart';
-import 'package:bazrin/feature/presentation/screens/home/home_screen.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter/material.dart';
 
 class LOGINSCREEN extends StatefulWidget {
   const LOGINSCREEN({super.key});
@@ -17,12 +10,85 @@ class LOGINSCREEN extends StatefulWidget {
 class _LOGINSCREENState extends State<LOGINSCREEN> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
-  bool _isSwitched = true;
+  final TextEditingController phonecontroller = TextEditingController();
+  dynamic phoneNumber;
 
-  void login() {
-    Navigator.of(context).push(
-      SlidePageRoute(page: const HomeScreen(), direction: SlideDirection.right),
+  bool _isSwitched = true;
+  bool _isloading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (_isSwitched) {
+      phoneNumber = LocalStorage.box.get('usernameorphone') ?? '';
+      // usernameController.text = LocalStorage.box.get('usernameorphone') ?? '';
+      passwordController.text = LocalStorage.box.get('password') ?? '';
+    }
+  }
+
+  void login() async {
+    setState(() {
+      _isloading = true;
+    });
+    final dio = Dio(
+      BaseOptions(
+        baseUrl: ApiAddress.HOST_AUTH,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      ),
     );
+
+    try {
+      final response = await dio.post(
+        '/api/auth/login',
+        data: {"identifier": phoneNumber, "password": passwordController.text},
+      );
+
+      final accessToken = response.data['accessToken'];
+      final refreshToken = response.data['refreshToken'];
+
+      await LocalStorage.box.put('accessToken', accessToken);
+      await LocalStorage.box.put('refreshToken', refreshToken);
+      if (_isSwitched) {
+        await LocalStorage.box.put('usernameorphone', phoneNumber);
+        await LocalStorage.box.put('password', passwordController.text);
+      }
+
+      if (accessToken != null) {
+        Navigator.of(context).push(
+          SlidePageRoute(
+            page: const HomeScreen(),
+            direction: SlideDirection.right,
+          ),
+        );
+        setState(() {
+          _isloading = false;
+        });
+        TostMessage.showToast(
+          context,
+          message: "Login Successfully done",
+          isSuccess: true,
+        );
+      }
+    } on DioError catch (e) {
+      // print('DioError: ${e.response?.statusCode}');
+      // print('Response data: ${e.response?.data}');
+      setState(() {
+        _isloading = false;
+      });
+      TostMessage.showToast(
+        context,
+        message: " ${e.response?.data['identifier']}",
+        isSuccess: false,
+      );
+    } catch (e) {
+      setState(() {
+        _isloading = false;
+      });
+      // print('Unknown error: $e');
+    }
   }
 
   @override
@@ -103,7 +169,7 @@ class _LOGINSCREENState extends State<LOGINSCREEN> {
                 ),
               ),
 
-              // ⚪ LOGIN FORM SECTION
+              //  LOGIN FORM SECTION
               Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 45,
@@ -129,11 +195,18 @@ class _LOGINSCREENState extends State<LOGINSCREEN> {
                     // LOGIN INPUTS
                     Column(
                       children: [
-                        INPUTCONTAINER(
-                          label: 'Login',
-                          hint: 'Email or phone number',
-                          passwordController: usernameController,
+                        PhoneInputWidget(
+                          isBoldText: false,
+                          label: "Email or phone number",
+                          insialNumber: phoneNumber,
+                          phonecontrollerl: phonecontroller,
+                          data: (e) {
+                            setState(() {
+                              phoneNumber = e;
+                            });
+                          },
                         ),
+
                         const SizedBox(height: 10),
                         INPUTCONTAINER(
                           label: 'Password',
@@ -186,6 +259,7 @@ class _LOGINSCREENState extends State<LOGINSCREEN> {
                             title: 'Login',
                             colorData: AppColors.Colorprimary,
                             buttonFunction: login,
+                            isloading: _isloading,
                           ),
                         ),
                       ],
