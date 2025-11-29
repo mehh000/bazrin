@@ -24,7 +24,7 @@ class _PosSellItemState extends State<PosSellItem> {
     super.initState();
     setState(() {
       currentQty = widget.item['posQty'] ?? 0;
-      maxQty = widget.item['totalStock'] ?? 0;
+      maxQty = widget.item['stock'] ?? 0;
     });
   }
 
@@ -71,7 +71,7 @@ class _PosSellItemState extends State<PosSellItem> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Stock: ${item['totalStock']}',
+                      'Stock: ${item['stock']}',
                       style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
@@ -95,7 +95,6 @@ class _PosSellItemState extends State<PosSellItem> {
 
           const SizedBox(width: 10),
 
-         
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [

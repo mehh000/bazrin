@@ -65,7 +65,7 @@ class _CheckOutState extends State<CheckOut> {
             "quantity": e['posQty'],
             "variant": [],
             "discount": null,
-            "model": null,
+            "model": e['selectedModel'] ?? null,
           },
         )
         .toList();
@@ -91,7 +91,7 @@ class _CheckOutState extends State<CheckOut> {
           double.tryParse(widget.cheakoutData['deliveryCharge']) ?? 0,
       "vatPercent": widget.cheakoutData['vat'],
     };
-
+    // PrettyPrint.print(cheakOutDetails);
     final response = await Addpossell.addPosSell(cheakOutDetails);
     if (response == "success") {
       Navigator.of(

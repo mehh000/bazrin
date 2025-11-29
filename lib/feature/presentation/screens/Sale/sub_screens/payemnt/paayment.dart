@@ -180,12 +180,16 @@ class _PaaymentState extends State<Paayment> {
       "discount": discountController.text,
       "deliveryCharge": deliveryChangeController.text,
       "vat": vatController.text,
+      "model": selectedItems[0]['selectedModel'],
     };
-    PrettyPrint.print(cheakoutData);
+    // PrettyPrint.print(cheakoutData);
 
-    Navigator.of(
-      context,
-    ).push(SlidePageRoute(page: CheckOut(cheakoutData : cheakoutData), direction: SlideDirection.right));
+    Navigator.of(context).push(
+      SlidePageRoute(
+        page: CheckOut(cheakoutData: cheakoutData),
+        direction: SlideDirection.right,
+      ),
+    );
   }
 
   @override

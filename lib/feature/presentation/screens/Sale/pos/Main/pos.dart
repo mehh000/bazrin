@@ -1,13 +1,10 @@
 import 'package:bazrin/feature/data/API/Helper/Pos/Sale/getPosProductList.dart';
-import 'package:bazrin/feature/data/API/Helper/Pos/Sale/getPosSale.dart';
-import 'package:bazrin/feature/data/API/Helper/Product/getProductList.dart';
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
-import 'package:bazrin/feature/presentation/common/classes/prettyPrint.dart';
+import 'package:bazrin/feature/presentation/screens/Sale/pos/Main/Components/pos_drawer.dart';
 import 'package:bazrin/feature/presentation/screens/Sale/pos/widgets/productCard.dart';
 import 'package:bazrin/feature/presentation/screens/Sale/sub_screens/payemnt/paayment.dart';
 import 'package:bazrin/feature/presentation/screens/Sale/widgets/product_search.dart';
 import 'package:bazrin/feature/presentation/screens/supplier/sub_screens/Advance/filter-advance/filter.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class Pos extends StatefulWidget {
@@ -18,6 +15,7 @@ class Pos extends StatefulWidget {
 }
 
 class _PosState extends State<Pos> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   dynamic posItems;
   bool isloading = false;
   dynamic selectedItems = [];
@@ -66,6 +64,11 @@ class _PosState extends State<Pos> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        key: _scaffoldKey,
+        drawer: Drawer(
+          backgroundColor: AppColors.Colorprimary,
+          child: PosDrawer(),
+        ),
         backgroundColor: AppColors.Colorprimary,
         body: Column(
           children: [
@@ -80,10 +83,15 @@ class _PosState extends State<Pos> {
                 spacing: 20, // ✅ works in latest Flutter
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SvgPicture.asset(
-                    'assets/images/icons/3bar.svg',
-                    width: 30,
-                    height: 30,
+                  GestureDetector(
+                    onTap: () {
+                      _scaffoldKey.currentState?.openDrawer();
+                    },
+                    child: SvgPicture.asset(
+                      'assets/images/icons/3bar.svg',
+                      width: 30,
+                      height: 30,
+                    ),
                   ),
 
                   // Search bar expanded to fit space
@@ -189,7 +197,7 @@ class _PosState extends State<Pos> {
                       buttonFunction: () {
                         Navigator.of(context).push(
                           SlidePageRoute(
-                            page: Paayment(selectedItems : selectedItems),
+                            page: Paayment(selectedItems: selectedItems),
                             direction: SlideDirection.right,
                           ),
                         );

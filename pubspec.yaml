@@ -41,6 +41,7 @@ dependencies:
   currency_picker: ^2.0.21
   barcode: ^2.2.9
   flutter_staggered_grid_view: ^0.7.0
+  infinite_scroll_pagination: ^5.1.1
 
 dev_dependencies:
   flutter_test:

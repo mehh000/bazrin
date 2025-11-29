@@ -56,7 +56,7 @@ export 'package:bazrin/feature/presentation/screens/Purchase/sub_screens/Purchas
 export 'package:bazrin/feature/presentation/screens/Quotation/Main/Quotation.dart';
 export 'package:bazrin/feature/presentation/screens/Quotation/Add/add_quation.dart';
 export 'package:bazrin/feature/presentation/screens/Role/role_list.dart';
-export 'package:bazrin/feature/presentation/screens/Sale/pos/pos.dart';
+export 'package:bazrin/feature/presentation/screens/Sale/pos/Main/pos.dart';
 export 'package:bazrin/feature/presentation/screens/Sale/sub_screens/ManageSales/Main/manage_sales.dart';
 export 'package:bazrin/feature/presentation/screens/Sale/sub_screens/OnlineOrders/Main/online_orders.dart';
 export 'package:bazrin/feature/presentation/screens/Sale/sub_screens/SaleReturnTypes/sale_return_types.dart';
