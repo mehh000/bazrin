@@ -44,7 +44,6 @@ class _QuotationState extends State<Quotation> {
       quotationList = response;
       isloading = false;
     });
-    PrettyPrint.print(response);
   }
 
   void delete(id) async {

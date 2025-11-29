@@ -11,7 +11,6 @@ class AddCustomer extends StatefulWidget {
 }
 
 class _AddCustomerState extends State<AddCustomer> {
-  
   TextEditingController usernameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController addressController = TextEditingController();
@@ -64,7 +63,7 @@ class _AddCustomerState extends State<AddCustomer> {
                 onTap: () {
                   Navigator.of(context).push(
                     SlidePageRoute(
-                      page: SupplierList(),
+                      page: CustomarList(),
                       direction: SlideDirection.left,
                     ),
                   );

@@ -1,7 +1,7 @@
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
 
-class Addexpense {
-  static Future<dynamic> addExpense(data) async {
+class AddorderSaleReturn {
+  static Future<dynamic> addOrderSaleReturn(data) async {
     final dio = Dio(BaseOptions(baseUrl: ApiAddress.HOST_STORE));
     final accessToken = LocalStorage.box.get('accessToken');
 
@@ -13,29 +13,21 @@ class Addexpense {
 
     try {
       final response = await dio.post(
-        '/${shopresponse['shopNameslug']}/${shopresponse['branchNameslug']}/expenses',
+        '/${shopresponse['shopNameslug']}/${shopresponse['branchNameslug']}/sale-returns',
         data: {
-          "categoryId": data['category']['id'],
-          "date": data['date'],
           "invoiceNumber": data['invoiceNumber'],
-          "payments": [
-            {
-              "accountId": data['paymentData']['id'],
-              "amount": data['payamount'],
-            },
-          ],
-
+          "saleId": data['saleId'],
+          "returnTypeId": data['returnTypeId'],
+          "returnDate": data['returnDate'],
           "note": data['note'],
           "items": data['items'],
-
-          // .toList(),
-          "attachments": [],
+          "payments": data['payments'],
         },
         options: Options(headers: {'authorization': 'Bearer $accessToken'}),
       );
       // print('send data $data');
       // print(' Expense data: ${response.data}');
-      return {'success': response.data};
+      return 'success';
     } on DioError catch (e) {
       // print(' DioError: ${e.response?.statusCode}');
       // print('Response data: ${e.response?.data}');
@@ -45,5 +37,3 @@ class Addexpense {
     }
   }
 }
-
-

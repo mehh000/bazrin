@@ -8,6 +8,7 @@ class StatusDropdown extends StatefulWidget {
   final String hint;
   final Function? selectedStatus;
   final String inistSate;
+  final dynamic data;
 
   const StatusDropdown({
     super.key,
@@ -16,6 +17,7 @@ class StatusDropdown extends StatefulWidget {
     this.hint = "Select status",
     this.selectedStatus,
     this.inistSate = '',
+    this.data,
   });
 
   @override
@@ -58,7 +60,7 @@ class _StatusDropdownState extends State<StatusDropdown> {
             border: Border.all(width: 1, color: AppColors.colorTextGray),
           ),
           child: DropdownSearch<String>(
-            items: (String _, __) => statusList,
+            items: (String _, __) => widget.data ?? statusList,
             selectedItem: widget.inistSate.isEmpty
                 ? selectedStatus
                 : widget.inistSate,

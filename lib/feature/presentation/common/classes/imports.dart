@@ -8,7 +8,7 @@ export 'package:dotted_border/dotted_border.dart';
 export 'package:flutter_quill/flutter_quill.dart';
 export 'package:bazrin/feature/presentation/screens/customers/Customer/Main/customar_list.dart';
 export 'package:bazrin/feature/presentation/screens/Purchase/Purchase/Add/add_purchase.dart';
-export 'package:bazrin/feature/presentation/screens/Purchase/sub_screens/EditPurchaseProduct/edit_purchase_product.dart';
+export 'package:bazrin/feature/presentation/screens/Purchase/Purchase/Edit/edit_purchase_product.dart';
 export 'package:bazrin/feature/presentation/screens/Purchase/sub_screens/PurchaseReturn/purchase_return.dart';
 export 'package:bazrin/feature/presentation/screens/Purchase/Purchase/View/purchase_view.dart';
 export 'package:flutter_localizations/flutter_localizations.dart';
@@ -58,7 +58,7 @@ export 'package:bazrin/feature/presentation/screens/Quotation/Add/add_quation.da
 export 'package:bazrin/feature/presentation/screens/Role/role_list.dart';
 export 'package:bazrin/feature/presentation/screens/Sale/pos/pos.dart';
 export 'package:bazrin/feature/presentation/screens/Sale/sub_screens/ManageSales/Main/manage_sales.dart';
-export 'package:bazrin/feature/presentation/screens/Sale/sub_screens/OnlineOrders/online_orders.dart';
+export 'package:bazrin/feature/presentation/screens/Sale/sub_screens/OnlineOrders/Main/online_orders.dart';
 export 'package:bazrin/feature/presentation/screens/Sale/sub_screens/SaleReturnTypes/sale_return_types.dart';
 export 'package:bazrin/feature/presentation/screens/Sale/sub_screens/Sales_Return/sales_return.dart';
 export 'package:bazrin/feature/presentation/screens/Settings/store_settings.dart';

@@ -1,4 +1,4 @@
-import 'package:bazrin/feature/data/API/Helper/Pos/getOrderByid.dart';
+import 'package:bazrin/feature/data/API/Helper/Pos/Sale/getOrderByid.dart';
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
 import 'package:bazrin/feature/presentation/common/classes/prettyPrint.dart';
 import 'package:bazrin/feature/presentation/screens/Sale/sub_screens/ManageSales/View/Components/order_package_level.dart';
@@ -20,12 +20,10 @@ class _ManagesellViewState extends State<ManagesellView> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     setState(() {
       profileData = LocalStorage.box.get('myprofile');
     });
-    // PrettyPrint.print(profileData);
     getOrderDetails();
   }
 

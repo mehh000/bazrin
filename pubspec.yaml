@@ -40,6 +40,7 @@ dependencies:
   vsc_quill_delta_to_html: ^1.0.5
   currency_picker: ^2.0.21
   barcode: ^2.2.9
+  flutter_staggered_grid_view: ^0.7.0
 
 dev_dependencies:
   flutter_test:

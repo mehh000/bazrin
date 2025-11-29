@@ -11,6 +11,7 @@ class Rowlinedatashow extends StatelessWidget {
   final bool leftIcon;
   final bool rightIcon;
   final double fontSize;
+  final FontWeight fontw;
 
   const Rowlinedatashow({
     super.key,
@@ -23,6 +24,7 @@ class Rowlinedatashow extends StatelessWidget {
     this.leftIcon = false,
     this.rightIcon = false,
     this.fontSize = 12,
+    this.fontw = FontWeight.w400,
   });
 
   @override
@@ -32,7 +34,6 @@ class Rowlinedatashow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // 🔹 Left side
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -44,16 +45,14 @@ class Rowlinedatashow extends StatelessWidget {
                 style: TextStyle(
                   color: leftTextColor,
                   fontSize: fontSize,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: fontw,
                 ),
               ),
             ],
           ),
 
-          // 🔹 Spacer between left & right
           const SizedBox(width: 10),
 
-          // 🔹 Right side (this will wrap properly)
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
@@ -73,6 +72,7 @@ class Rowlinedatashow extends StatelessWidget {
                       style: TextStyle(
                         color: rightTextColor,
                         fontSize: fontSize,
+                        fontWeight: fontw,
                       ),
                     ),
                   ),

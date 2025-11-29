@@ -3,7 +3,8 @@ import 'package:bazrin/feature/presentation/screens/Sale/sub_screens/checkout/ch
 import 'package:flutter/material.dart';
 
 class Checkoutactionbutton extends StatelessWidget {
-  const Checkoutactionbutton({super.key});
+  final VoidCallback generateBill;
+  const Checkoutactionbutton({super.key, required this.generateBill});
 
   @override
   Widget build(BuildContext context) {
@@ -32,12 +33,7 @@ class Checkoutactionbutton extends StatelessWidget {
           Expanded(
             child: GestureDetector(
               onTap: () {
-                Navigator.of(context).push(
-                  SlidePageRoute(
-                    page: CheckOut(),
-                    direction: SlideDirection.right,
-                  ),
-                );
+                generateBill();
               },
               child: Container(
                 height: 60,

@@ -22,7 +22,6 @@ class _AddQuationState extends State<AddQuation> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getProductList();
   }

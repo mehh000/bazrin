@@ -1,48 +1,31 @@
-import 'package:bazrin/feature/data/API/Helper/Pos/Sale/deletePosSalebyId.dart';
-import 'package:bazrin/feature/data/API/Helper/Pos/Sale/getPosSale.dart';
+import 'package:bazrin/feature/data/API/Helper/Pos/Online/getOnlineOrders.dart';
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
-import 'package:bazrin/feature/presentation/common/classes/prettyPrint.dart';
-import 'package:bazrin/feature/presentation/screens/Sale/sub_screens/ManageSales/Main/Components/manage_sell_card.dart';
-import 'package:flutter/widgets.dart';
+import 'package:bazrin/feature/presentation/screens/Sale/sub_screens/OnlineOrders/Main/Components/orline_order_card.dart';
 
-class ManageSales extends StatefulWidget {
-  const ManageSales({super.key});
+class OnlineOrders extends StatefulWidget {
+  const OnlineOrders({super.key});
 
   @override
-  State<ManageSales> createState() => _ManageSalesState();
+  State<OnlineOrders> createState() => _OnlineOrdersState();
 }
 
-class _ManageSalesState extends State<ManageSales> {
-  dynamic sales;
+class _OnlineOrdersState extends State<OnlineOrders> {
+  dynamic onlineOrders;
   bool isloading = false;
+
   @override
   void initState() {
     super.initState();
-    getSales();
+    getOrders();
   }
 
-  Future<void> getSales() async {
+  Future<void> getOrders() async {
+    setState(() => isloading = true);
+    final response = await GetonlineOrders.getOnlineOrders();
     setState(() {
-      isloading = true;
-    });
-
-    final response = await Getpossale.getPosSale();
-    setState(() {
-      sales = response;
+      onlineOrders = response;
       isloading = false;
     });
-  }
-
-  void delete(id) async {
-    final resposne = await Deletepossalebyid.deletePosSalebyId(id);
-    if (resposne == 'success') {
-      TostMessage.showToast(
-        context,
-        message: "Order Delete Successfully done",
-        isSuccess: true,
-      );
-    }
-    getSales();
   }
 
   @override
@@ -68,7 +51,7 @@ class _ManageSalesState extends State<ManageSales> {
             ],
           ),
           title: Text(
-            'Manage Sales',
+            'Online Orders',
             style: TextStyle(
               color: Colors.white,
               fontSize: 16,
@@ -144,6 +127,7 @@ class _ManageSalesState extends State<ManageSales> {
                 ],
               ),
             ),
+
             SizedBox(height: 20),
 
             Expanded(
@@ -166,19 +150,19 @@ class _ManageSalesState extends State<ManageSales> {
                         ),
                       )
                     : RefreshIndicator(
-                        onRefresh: () => getSales(),
+                        onRefresh: () => getOrders(),
                         child: ListView.separated(
-                          separatorBuilder: (context, index) =>
-                              SizedBox(height: 6),
-                          itemCount: sales.length ?? 0,
+                          physics: AlwaysScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
-                            return ManageSellCard(
-                              sale: sales[index],
-                              delfuntion: (id) {
-                                delete(id);
-                              },
+                            return OrlineOrderCard(
+                              sale: onlineOrders[index],
+                              delfuntion: (id) {},
                             );
                           },
+                          separatorBuilder: (context, index) {
+                            return SizedBox(height: 8);
+                          },
+                          itemCount: onlineOrders.length,
                         ),
                       ),
               ),

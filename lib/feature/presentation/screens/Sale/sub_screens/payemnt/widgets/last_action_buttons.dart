@@ -3,7 +3,15 @@ import 'package:bazrin/feature/presentation/screens/Sale/sub_screens/checkout/ch
 import 'package:flutter/material.dart';
 
 class LastActionButtons extends StatelessWidget {
-  const LastActionButtons({super.key});
+  final dynamic selectedItems;
+  final VoidCallback cleanAll;
+  final VoidCallback addToCheakOut;
+  const LastActionButtons({
+    super.key,
+    required this.selectedItems,
+    required this.cleanAll,
+    required this.addToCheakOut,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,16 +22,21 @@ class LastActionButtons extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: Container(
-              height: 60,
-              color: Colors.red,
-              child: Center(
-                child: Text(
-                  'Clear All (2)',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: Colors.white,
+            child: GestureDetector(
+              onTap: () {
+                cleanAll();
+              },
+              child: Container(
+                height: 60,
+                color: Colors.red,
+                child: Center(
+                  child: Text(
+                    'Clear All (${selectedItems.length})',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -32,12 +45,7 @@ class LastActionButtons extends StatelessWidget {
           Expanded(
             child: GestureDetector(
               onTap: () {
-                Navigator.of(context).push(
-                  SlidePageRoute(
-                    page: CheckOut(),
-                    direction: SlideDirection.right,
-                  ),
-                );
+                addToCheakOut();
               },
               child: Container(
                 height: 60,
