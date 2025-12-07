@@ -1,7 +1,13 @@
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
 
 class Supplierspayments {
-  static Future<dynamic> getSupplierPayments(String type) async {
+  static Future<dynamic> getSupplierPayments(
+    String type, [
+    int page = 0,
+    String invoiceNumber = '',
+    String supplierId = '',
+    String accountId = '',
+  ]) async {
     final dio = Dio(BaseOptions(baseUrl: ApiAddress.HOST_STORE));
     final accessToken = LocalStorage.box.get('accessToken');
 
@@ -13,15 +19,18 @@ class Supplierspayments {
 
     try {
       final response = await dio.get(
-        '/${shopresponse['shopNameslug']}/${shopresponse['branchNameslug']}/supplier-payments?type=$type&invoiceNumber&supplierId&accountId',
+        '/${shopresponse['shopNameslug']}/${shopresponse['branchNameslug']}/supplier-payments?type=$type&page=$page&invoiceNumber=$invoiceNumber&supplierId=$supplierId&accountId=$accountId',
         options: Options(headers: {'authorization': 'Bearer $accessToken'}),
       );
 
       // print('✅ Payemnt data: ${response.data['content']}');
-      return response.data['content'];
+      return {
+        "data": response.data['content'],
+        "totalPage": response.data['totalPages'],
+      };
     } on DioError catch (e) {
-      print(' DioError: ${e.response?.statusCode}');
-      print('Payemnt data: ${e.response?.data}');
+      // print(' DioError: ${e.response?.statusCode}');
+      // print('Payemnt data: ${e.response?.data}');
     } catch (e) {
       // print(' Unknown error: $e');
     }

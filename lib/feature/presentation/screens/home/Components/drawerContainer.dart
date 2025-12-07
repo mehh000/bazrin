@@ -1,10 +1,11 @@
 import 'package:bazrin/feature/data/API/Helper/Profile/getmyprofile.dart';
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
 import 'package:bazrin/feature/presentation/common/classes/prettyPrint.dart';
-import 'package:bazrin/feature/presentation/screens/supplier/sub_screens/PurchaseDismiss/Main/purchase_dismiss_list.dart';
-import 'package:bazrin/feature/presentation/screens/supplier/sub_screens/PurchaseDue/Main/supplier_purchase_due_list.dart';
-import 'package:bazrin/feature/presentation/screens/supplier/sub_screens/ReturnDismiss/Main/return_dismiss_list.dart';
-import 'package:bazrin/feature/presentation/screens/supplier/sub_screens/ReturnDue/Main/return_due_list.dart';
+import 'package:bazrin/feature/presentation/screens/Promotion/flash_sale_list.dart';
+import 'package:bazrin/feature/presentation/screens/supplier/Presentation/PurchaseDismiss/Main/purchase_dismiss_list.dart';
+import 'package:bazrin/feature/presentation/screens/supplier/Presentation/PurchaseDue/Main/supplier_purchase_due_list.dart';
+import 'package:bazrin/feature/presentation/screens/supplier/Presentation/ReturnDismiss/Main/return_dismiss_list.dart';
+import 'package:bazrin/feature/presentation/screens/supplier/Presentation/ReturnDue/Main/return_due_list.dart';
 
 class DrawerContainer extends StatefulWidget {
   final dynamic shop;
@@ -37,7 +38,11 @@ class _DrawerContainerState extends State<DrawerContainer> {
   }
 
   final List<Map<String, dynamic>> demoMenuData = [
-    {'title': 'Dashboard', 'icon': 'assets/images/icons/deshboard.svg'},
+    {
+      'title': 'Dashboard',
+      'icon': 'assets/images/icons/deshboard.svg',
+      'path': HomeScreen,
+    },
     {
       'title': 'Suppliers',
       'icon': 'assets/images/icons/suppliers.svg',
@@ -249,7 +254,11 @@ class _DrawerContainerState extends State<DrawerContainer> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    if (item['title'] == 'Dashboard') return;
+                    if (item['title'] == 'Dashboard') {
+                      Navigator.of(context).pop();
+                      return;
+                    }
+
                     setState(() {
                       activeIndex = activeIndex == index ? null : index;
                     });

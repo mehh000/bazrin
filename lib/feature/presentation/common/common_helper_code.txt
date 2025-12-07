@@ -117,3 +117,78 @@
             ),
 
 
+          //  for infinit scrolling
+            final ScrollController _scrollController = ScrollController();
+int page = 0;
+bool isLoadingMore = false;
+bool noMoreData = false;
+
+@override
+void initState() {
+  super.initState();
+
+  _scrollController.addListener(() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      loadMore();
+    }
+  });
+
+  getposItems(); // first page
+}
+
+Future<void> getposItems() async {
+  page = 0;
+  noMoreData = false;
+  setState(() => isloading = true);
+
+  final response = await Getposproductlist.getPosProductList(page);
+
+  setState(() {
+    posItems = response;
+    isloading = false;
+  });
+}
+Future<void> loadMore() async {
+  if (isLoadingMore || noMoreData) return;
+
+  isLoadingMore = true;
+  page = page + 1;
+
+  final response = await Getposproductlist.getPosProductList(page);
+
+  if (response.isEmpty) {
+    noMoreData = true;
+  } else {
+    setState(() {
+      posItems.addAll(response);
+    });
+  }
+
+  isLoadingMore = false;
+}
+RefreshIndicator(
+  onRefresh: getposItems,
+  child: AlignedGridView.count(
+    controller: _scrollController,
+    physics: AlwaysScrollableScrollPhysics(),
+    crossAxisCount: 2,
+    mainAxisSpacing: 4,
+    crossAxisSpacing: 4,
+    itemCount: posItems.length,
+    itemBuilder: (context, index) {
+      return Productcard(
+        posItems: posItems[index],
+        addfuntion: (e) {
+          addItemToCart(e);
+        },
+        addremovefuntion: (e) {
+          incrementAddedItemToCart(e);
+        },
+      );
+    },
+  ),
+)
+
+
+

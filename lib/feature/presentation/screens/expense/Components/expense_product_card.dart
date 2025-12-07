@@ -1,6 +1,6 @@
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
-import 'package:bazrin/feature/presentation/common/widgets/deleteDialog.dart';
-import 'package:bazrin/feature/presentation/screens/expense/Products/Edit/edit_expense_product.dart';
+import 'package:bazrin/feature/presentation/common/Components/deleteDialog.dart';
+import 'package:bazrin/feature/presentation/screens/expense/Presentation/Products/Edit/edit_expense_product.dart';
 
 class ExpenseProductCard extends StatefulWidget {
   final dynamic pro;

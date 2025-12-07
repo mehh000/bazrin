@@ -1,12 +1,12 @@
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
-import 'package:bazrin/feature/presentation/common/widgets/deleteDialog.dart';
-import 'package:bazrin/feature/presentation/screens/products/subScreen/EditCategory/edit_cetagory.dart';
-import 'package:bazrin/feature/presentation/screens/supplier/Supplier/Add/supplier_advance_pay.dart';
-import 'package:bazrin/feature/presentation/screens/supplier/Supplier/Add/supplier_purchase_due_dismiss.dart';
-import 'package:bazrin/feature/presentation/screens/supplier/Supplier/Add/supplier_return_due_dismiss.dart';
-import 'package:bazrin/feature/presentation/screens/supplier/Supplier/Add/supplier_return_due_receive.dart';
-import 'package:bazrin/feature/presentation/screens/supplier/Supplier/Edit/edit_supplier.dart';
-import 'package:bazrin/feature/presentation/screens/supplier/sub_screens/Ledger/ledger.dart';
+import 'package:bazrin/feature/presentation/common/Components/deleteDialog.dart';
+import 'package:bazrin/feature/presentation/screens/products/Presentation/CategoryList/edit_cetagory.dart';
+import 'package:bazrin/feature/presentation/screens/supplier/Presentation/Supplier/Add/supplier_advance_pay.dart';
+import 'package:bazrin/feature/presentation/screens/supplier/Presentation/Supplier/Add/supplier_purchase_due_dismiss.dart';
+import 'package:bazrin/feature/presentation/screens/supplier/Presentation/Supplier/Add/supplier_return_due_dismiss.dart';
+import 'package:bazrin/feature/presentation/screens/supplier/Presentation/Supplier/Add/supplier_return_due_receive.dart';
+import 'package:bazrin/feature/presentation/screens/supplier/Presentation/Supplier/Edit/edit_supplier.dart';
+import 'package:bazrin/feature/presentation/screens/supplier/Presentation/Ledger/ledger.dart';
 import 'package:flutter/material.dart';
 
 class Supplier extends StatefulWidget {

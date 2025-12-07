@@ -1,6 +1,6 @@
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
-import 'package:bazrin/feature/presentation/common/widgets/deleteDialog.dart';
-import 'package:bazrin/feature/presentation/screens/expense/Categoris/Edit/edit_expense_category.dart';
+import 'package:bazrin/feature/presentation/common/Components/deleteDialog.dart';
+import 'package:bazrin/feature/presentation/screens/expense/Presentation/Categoris/Edit/edit_expense_category.dart';
 
 class ExpenseCategoryCard extends StatelessWidget {
   final dynamic cat;

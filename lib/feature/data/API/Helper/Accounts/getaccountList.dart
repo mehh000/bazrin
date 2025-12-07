@@ -1,9 +1,7 @@
-
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
 
-
 class Getaccountlist {
-  static Future<dynamic> getAccountsList() async {
+  static Future<dynamic> getAccountsList([int page = 0]) async {
     final dio = Dio(BaseOptions(baseUrl: ApiAddress.HOST_STORE));
     final accessToken = LocalStorage.box.get('accessToken');
 
@@ -15,12 +13,15 @@ class Getaccountlist {
 
     try {
       final response = await dio.get(
-        '/${shopresponse['shopNameslug']}/${shopresponse['branchNameslug']}/accounts',
+        '/${shopresponse['shopNameslug']}/${shopresponse['branchNameslug']}/accounts?page=$page',
         options: Options(headers: {'authorization': 'Bearer $accessToken'}),
       );
 
       // print('✅ Expense data: ${response.data['content']}');
-      return response.data['content'];
+      return {
+        "data": response.data['content'],
+        "totalPage": response.data['totalPages'],
+      };
     } on DioError catch (e) {
       // print(' DioError: ${e.response?.statusCode}');
       // print('Response data: ${e.response?.data}');

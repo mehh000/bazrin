@@ -19,7 +19,10 @@ class Getpurchase {
       );
 
       // print('✅ suppliers data: ${response.data['content']}');
-      return response.data['content'];
+      return {
+        "data": response.data['content'],
+        "totalPage": response.data['totalPages'],
+      };
     } on DioError catch (e) {
       // print(' DioError: ${e.response?.statusCode}');
       // print('Response data: ${e.response?.data}');
