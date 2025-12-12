@@ -1,12 +1,11 @@
 import 'package:bazrin/feature/data/API/Helper/Pos/Sale/getPosProductList.dart';
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
+import 'package:bazrin/feature/presentation/common/classes/prettyPrint.dart';
+import 'package:bazrin/feature/presentation/screens/Sale/Presentation/pos/Filter/filter.dart';
 import 'package:bazrin/feature/presentation/screens/Sale/Presentation/pos/Main/Components/pos_drawer.dart';
 import 'package:bazrin/feature/presentation/screens/Sale/Presentation/pos/widgets/productCard.dart';
 import 'package:bazrin/feature/presentation/screens/Sale/Presentation/payemnt/paayment.dart';
 import 'package:bazrin/feature/presentation/screens/Sale/Components/product_search.dart';
-import 'package:bazrin/feature/presentation/screens/supplier/Presentation/Supplier/Filter/filter.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class Pos extends StatefulWidget {
   const Pos({super.key});
@@ -25,6 +24,10 @@ class _PosState extends State<Pos> {
   int page = 0;
   bool isLoadingMore = false;
   bool noMoreData = false;
+
+  String productId = '';
+  String categoryId = '';
+  String brandId = '';
 
   @override
   void initState() {
@@ -94,6 +97,16 @@ class _PosState extends State<Pos> {
     setState(() {});
   }
 
+  void filterFuntion(filter) {
+    setState(() {
+      productId = filter['Product'];
+      categoryId = filter['category'];
+      brandId = filter['brand'];
+    });
+    getposItems();
+    // PrettyPrint.print(filter);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -132,11 +145,13 @@ class _PosState extends State<Pos> {
                   const Expanded(child: ProductSearch()),
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context).push(
-                        SlidePageRoute(
-                          page: const FilterAdvance(),
-                          direction: SlideDirection.right,
-                        ),
+                      FullScreenRightDialog.open(
+                        context: context,
+                        child: PosFilter(
+                          filterSubmit: (f) {
+                            filterFuntion(f);
+                          },
+                        ), // your custom widget
                       );
                     },
                     child: SvgPicture.asset(

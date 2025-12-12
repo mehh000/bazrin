@@ -1,9 +1,4 @@
-import 'package:bazrin/feature/presentation/common/classes/SlidePageRoute.dart';
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
-import 'package:bazrin/feature/presentation/common/Components/buttonEv.dart';
-import 'package:bazrin/feature/presentation/screens/products/Presentation/Product/Main/products_screen.dart';
-import 'package:dotted_border/dotted_border.dart';
-import 'package:flutter/material.dart';
 
 class ViewProduct extends StatefulWidget {
   const ViewProduct({super.key});

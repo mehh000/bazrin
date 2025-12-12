@@ -1,6 +1,5 @@
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
 import 'package:bazrin/feature/presentation/common/Components/deleteDialog.dart';
-import 'package:bazrin/feature/presentation/screens/products/Presentation/CategoryList/edit_cetagory.dart';
 import 'package:bazrin/feature/presentation/screens/supplier/Presentation/Supplier/Add/supplier_advance_pay.dart';
 import 'package:bazrin/feature/presentation/screens/supplier/Presentation/Supplier/Add/supplier_purchase_due_dismiss.dart';
 import 'package:bazrin/feature/presentation/screens/supplier/Presentation/Supplier/Add/supplier_return_due_dismiss.dart';

@@ -1,7 +1,9 @@
 import 'package:bazrin/feature/data/API/Helper/Product/deleteProductById.dart';
 import 'package:bazrin/feature/data/API/Helper/Product/getProductList.dart';
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
+import 'package:bazrin/feature/presentation/common/classes/prettyPrint.dart';
 import 'package:bazrin/feature/presentation/screens/products/Components/product.dart';
+import 'package:bazrin/feature/presentation/screens/products/Presentation/Product/Filter/filter.dart';
 
 class ProductsScreen extends StatefulWidget {
   const ProductsScreen({super.key});
@@ -15,10 +17,16 @@ class _ProductsScreenState extends State<ProductsScreen> {
   List<dynamic> products = [];
 
   final ScrollController _scrollController = ScrollController();
+  TextEditingController searchController = TextEditingController();
+  Timer? _debounce;
   int page = 0;
   bool isLoadingMore = false;
   bool noMoreData = false;
   bool isloading = false;
+
+  String supplierID = '';
+  String brandID = '';
+  String categoryID = '';
 
   @override
   void initState() {
@@ -53,7 +61,13 @@ class _ProductsScreenState extends State<ProductsScreen> {
     page = 0;
     noMoreData = false;
 
-    final response = await Getproductlist.getProductList(page);
+    final response = await Getproductlist.getProductList(
+      page,
+      searchController.text,
+      brandID,
+      categoryID,
+      supplierID,
+    );
     setState(() {
       products = List<Map<String, dynamic>>.from(response['data'] ?? []);
       isloading = false;
@@ -97,7 +111,28 @@ class _ProductsScreenState extends State<ProductsScreen> {
         isSuccess: true,
       );
     }
-    print('id $id');
+    // print('id $id');
+  }
+
+  void onSearchChanged(String text) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    setState(() {
+      searchController.text = text;
+    });
+
+    _debounce = Timer(const Duration(milliseconds: 400), () {
+      getProducts();
+    });
+  }
+
+  void filterFuntion(filter) { 
+    setState(() {
+      brandID = filter['brand'];
+      categoryID = filter['category'];
+      supplierID = filter['supplier'];
+    });
+    // getProducts();
+    PrettyPrint.print(filter);
   }
 
   @override
@@ -153,8 +188,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     children: [
                       Expanded(
                         child: TextField(
+                          controller: searchController,
+                          onChanged: (value) => onSearchChanged(value),
                           decoration: InputDecoration(
-                            hintText: 'Search',
+                            hintText: 'Search With Product Name',
                             suffixIcon: Icon(
                               Icons.search,
                               size: 25,
@@ -180,11 +217,13 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.of(context).push(
-                            SlidePageRoute(
-                              page: Filter(),
-                              direction: SlideDirection.right,
-                            ),
+                          FullScreenRightDialog.open(
+                            context: context,
+                            child: ProductFilter(
+                              filterSubmit: (e) {
+                                filterFuntion(e);
+                              },
+                            ), // your custom widget
                           );
                         },
                         child: SvgPicture.asset(

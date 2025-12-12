@@ -17,6 +17,8 @@ class _BrendListState extends State<BrendList> {
   bool _isExpanded = false;
 
   final ScrollController _scrollController = ScrollController();
+  TextEditingController searchController = TextEditingController();
+  Timer? _debounce;
   int page = 0;
   bool isLoadingMore = false;
   bool noMoreData = false;
@@ -53,7 +55,10 @@ class _BrendListState extends State<BrendList> {
     setState(() {
       islaoding = true;
     });
-    final response = await Getbrandlist.getBrandList(page);
+    final response = await Getbrandlist.getBrandList(
+      page,
+      searchController.text,
+    );
     setState(() {
       brands = response['data'];
       islaoding = false;
@@ -96,6 +101,17 @@ class _BrendListState extends State<BrendList> {
       );
       getBrands();
     }
+  }
+
+  void onSearchChanged(String text) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    setState(() {
+      searchController.text = text;
+    });
+
+    _debounce = Timer(const Duration(milliseconds: 400), () {
+      getBrands();
+    });
   }
 
   @override
@@ -144,64 +160,43 @@ class _BrendListState extends State<BrendList> {
                   color: AppColors.Colorprimary,
                   width: double.infinity,
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-                  child: Row(
-                    spacing: 30,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          decoration: InputDecoration(
-                            hint: Text(
-                              'Search',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.Colorprimary,
-                              ),
-                            ),
-                            suffixIcon: Icon(
-                              Icons.search,
-                              size: 25,
-                              color: AppColors.Colorprimary,
-                            ),
-                            filled: true,
-                            fillColor: Colors.white,
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(4),
-                              borderSide: BorderSide.none,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              vertical: 13,
-                              horizontal: 11,
-                            ),
-                          ),
-                          style: const TextStyle(
-                            fontSize: 14, // match your design
+                  child: Expanded(
+                    child: TextField(
+                      controller: searchController,
+                      onChanged: (value) => onSearchChanged(value),
+                      decoration: InputDecoration(
+                        hint: Text(
+                          'Search with Brand Name',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.Colorprimary,
                           ),
                         ),
-                      ),
-
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            SlidePageRoute(
-                              page: Filter(),
-                              direction: SlideDirection.right,
-                            ),
-                          );
-                        },
-                        child: SvgPicture.asset(
-                          'assets/images/icons/filter.svg',
-                          height: 28,
-                          width: 24,
-                          color: Colors.white,
+                        suffixIcon: Icon(
+                          Icons.search,
+                          size: 25,
+                          color: AppColors.Colorprimary,
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 13,
+                          horizontal: 11,
                         ),
                       ),
-                    ],
+                      style: const TextStyle(
+                        fontSize: 14, // match your design
+                      ),
+                    ),
                   ),
                 ),
 

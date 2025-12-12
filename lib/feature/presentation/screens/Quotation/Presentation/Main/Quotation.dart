@@ -17,10 +17,12 @@ class _QuotationState extends State<Quotation> {
   bool _isExpanded = false;
 
   final ScrollController _scrollController = ScrollController();
+  TextEditingController searchController = TextEditingController();
   int page = 0;
   bool isLoadingMore = false;
   bool noMoreData = false;
   bool isloading = false;
+  Timer? _debounce;
 
   @override
   void initState() {
@@ -52,7 +54,10 @@ class _QuotationState extends State<Quotation> {
     setState(() {
       isloading = true;
     });
-    final response = await Getquotationlist.getQuotationList(page);
+    final response = await Getquotationlist.getQuotationList(
+      page,
+      searchController.text,
+    );
     setState(() {
       quotationList = response['data'];
       isloading = false;
@@ -94,7 +99,19 @@ class _QuotationState extends State<Quotation> {
         message: "Quotation deleted successfully",
         isSuccess: false,
       );
+      getquotations();
     }
+  }
+
+  void onSearchChanged(String value) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    setState(() {
+      searchController.text = value;
+    });
+
+    _debounce = Timer(const Duration(milliseconds: 400), () {
+      getquotations();
+    });
   }
 
   @override
@@ -149,9 +166,11 @@ class _QuotationState extends State<Quotation> {
                     children: [
                       Expanded(
                         child: TextField(
+                          controller: searchController,
+                          onChanged: (value) => onSearchChanged(value),
                           decoration: InputDecoration(
                             hint: Text(
-                              'Search',
+                              'Search Quotation Number',
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w400,
@@ -184,22 +203,22 @@ class _QuotationState extends State<Quotation> {
                         ),
                       ),
 
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            SlidePageRoute(
-                              page: Filter(),
-                              direction: SlideDirection.right,
-                            ),
-                          );
-                        },
-                        child: SvgPicture.asset(
-                          'assets/images/icons/filter.svg',
-                          height: 28,
-                          width: 24,
-                          color: Colors.white,
-                        ),
-                      ),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     Navigator.of(context).push(
+                      //       SlidePageRoute(
+                      //         page: Filter(),
+                      //         direction: SlideDirection.right,
+                      //       ),
+                      //     );
+                      //   },
+                      //   child: SvgPicture.asset(
+                      //     'assets/images/icons/filter.svg',
+                      //     height: 28,
+                      //     width: 24,
+                      //     color: Colors.white,
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),

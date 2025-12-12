@@ -1,6 +1,4 @@
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
-import 'package:toastification/toastification.dart';
-import 'package:flutter/material.dart';
 
 class TostMessage {
   static void showToast(
@@ -15,14 +13,14 @@ class TostMessage {
       context: context,
       title: Text(
         isSuccess ? "Success" : "Error",
-        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        style: const TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+        ),
       ),
-      description: Text(
-        message,
-        style: const TextStyle(color: Colors.white),
-      ),
+      description: Text(message, style: const TextStyle(color: Colors.white)),
       icon: Icon(icon, color: Colors.white),
-      autoCloseDuration: const Duration(seconds: 3),
+      autoCloseDuration: const Duration(seconds: 1),
       backgroundColor: color,
       primaryColor: color,
       style: ToastificationStyle.fillColored,

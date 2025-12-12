@@ -1,7 +1,5 @@
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
-import 'package:bazrin/feature/presentation/screens/products/Presentation/CategoryList/edit_cetagory.dart';
 import 'package:bazrin/feature/presentation/screens/products/Presentation/Product/View/view_product.dart';
-
 
 class Cetagory extends StatefulWidget {
   const Cetagory({super.key});
@@ -154,12 +152,12 @@ class _CetagoryState extends State<Cetagory> {
                 if (selected != null) {
                   // handle action here
                   if (selected == 'edit') {
-                    Navigator.of(context).push(
-                      SlidePageRoute(
-                        page: EditCetagory(),
-                        direction: SlideDirection.right,
-                      ),
-                    );
+                    // Navigator.of(context).push(
+                    //   SlidePageRoute(
+                    //     page: EditCetagory(),
+                    //     direction: SlideDirection.right,
+                    //   ),
+                    // );
                   } else if (selected == 'delete') {
                     debugPrint('Delete clicked');
                   }

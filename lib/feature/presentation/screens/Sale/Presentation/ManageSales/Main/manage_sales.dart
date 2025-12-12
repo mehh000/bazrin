@@ -2,6 +2,7 @@ import 'package:bazrin/feature/data/API/Helper/Pos/Sale/deletePosSalebyId.dart';
 import 'package:bazrin/feature/data/API/Helper/Pos/Sale/getPosSale.dart';
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
 import 'package:bazrin/feature/presentation/common/classes/prettyPrint.dart';
+import 'package:bazrin/feature/presentation/screens/Sale/Presentation/ManageSales/Filter/filter.dart';
 import 'package:bazrin/feature/presentation/screens/Sale/Presentation/ManageSales/Main/Components/manage_sell_card.dart';
 import 'package:flutter/widgets.dart';
 
@@ -115,75 +116,29 @@ class _ManageSalesState extends State<ManageSales> {
               fontWeight: FontWeight.w500,
             ),
           ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 10.0),
+              child: GestureDetector(
+                onTap: () {
+                  FullScreenRightDialog.open(
+                    context: context,
+                    child: ManageSalesFilter(filterSubmit: (f) {}),
+                  );
+                },
+                child: SvgPicture.asset(
+                  'assets/images/icons/filter.svg',
+                  height: 24,
+                  width: 20,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
         ),
         backgroundColor: AppColors.Colorprimary,
         body: Column(
           children: [
-            // ======Header=========
-            Container(
-              color: AppColors.Colorprimary,
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-              child: Row(
-                spacing: 30,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hint: Text(
-                          'Search',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.Colorprimary,
-                          ),
-                        ),
-                        suffixIcon: Icon(
-                          Icons.search,
-                          size: 25,
-                          color: AppColors.Colorprimary,
-                        ),
-                        filled: true,
-                        fillColor: Colors.white,
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(4),
-                          borderSide: BorderSide.none,
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 13,
-                          horizontal: 11,
-                        ),
-                      ),
-                      style: const TextStyle(
-                        fontSize: 14, // match your design
-                      ),
-                    ),
-                  ),
-
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        SlidePageRoute(
-                          page: Filter(),
-                          direction: SlideDirection.right,
-                        ),
-                      );
-                    },
-                    child: SvgPicture.asset(
-                      'assets/images/icons/filter.svg',
-                      height: 28,
-                      width: 24,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
             SizedBox(height: 20),
 
             Expanded(

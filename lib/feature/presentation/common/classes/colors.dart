@@ -10,4 +10,5 @@ class AppColors {
   static const colorRed = Color(0xFFDA0032);
   static const graysecond = Color(0xFFF4F4F4);
   static const containerColor = Color(0xFFF5F5F7);
+  static const border = Color(0xFFD6DDD0);
 }

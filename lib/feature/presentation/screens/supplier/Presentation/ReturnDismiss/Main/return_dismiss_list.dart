@@ -1,9 +1,8 @@
 import 'package:bazrin/feature/data/API/Helper/Supplier/suppliersPayments.dart';
+import 'package:bazrin/feature/presentation/common/Components/FullScreenRightDIalog.dart';
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
-import 'package:bazrin/feature/presentation/screens/supplier/Presentation/Supplier/Filter/filter.dart';
 import 'package:bazrin/feature/presentation/screens/supplier/Presentation/ReturnDismiss/Components/supplier_purchase_dismiss_card.dart';
-import 'package:bazrin/feature/presentation/screens/supplier/Components/advancepaycard.dart';
-import 'package:flutter/widgets.dart';
+import 'package:bazrin/feature/presentation/screens/supplier/Presentation/ReturnDismiss/Filter/filter.dart';
 
 class ReturnDismissList extends StatefulWidget {
   const ReturnDismissList({super.key});
@@ -15,10 +14,15 @@ class ReturnDismissList extends StatefulWidget {
 class _ReturnDismissListState extends State<ReturnDismissList> {
   dynamic advacneList;
   final ScrollController _scrollController = ScrollController();
+
+  TextEditingController searchController = TextEditingController();
   int page = 0;
   bool isLoadingMore = false;
   bool noMoreData = false;
   bool isloading = false;
+  Timer? _debounce;
+  String supplierID = '';
+  String accountID = '';
 
   @override
   void initState() {
@@ -39,6 +43,9 @@ class _ReturnDismissListState extends State<ReturnDismissList> {
     final response = await Supplierspayments.getSupplierPayments(
       'PURCHASE_RETURN_DUE_DISMISSAL',
       page,
+      searchController.text,
+      supplierID,
+      accountID,
     );
     setState(() {
       advacneList = response['data'];
@@ -71,6 +78,26 @@ class _ReturnDismissListState extends State<ReturnDismissList> {
     });
 
     isLoadingMore = false;
+  }
+
+  void onSearchChanged(String text) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    setState(() {
+      searchController.text = text;
+    });
+
+    _debounce = Timer(const Duration(milliseconds: 400), () {
+      getAdvance();
+    });
+  }
+
+  void filterFuntion(filter) {
+    setState(() {
+      accountID = filter['account'];
+      supplierID = filter['supplier'];
+    });
+    getAdvance();
+    // PrettyPrint.print(filter);
   }
 
   @override
@@ -117,9 +144,11 @@ class _ReturnDismissListState extends State<ReturnDismissList> {
                 children: [
                   Expanded(
                     child: TextField(
+                      controller: searchController,
+                      onChanged: (value) => onSearchChanged(value),
                       decoration: InputDecoration(
                         hint: Text(
-                          'Search',
+                          'Search with InvoiceNumber',
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
@@ -154,11 +183,13 @@ class _ReturnDismissListState extends State<ReturnDismissList> {
 
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context).push(
-                        SlidePageRoute(
-                          page: FilterAdvance(),
-                          direction: SlideDirection.right,
-                        ),
+                      FullScreenRightDialog.open(
+                        context: context,
+                        child: ReturnDismisFilter(
+                          filterSubmit: (e) {
+                            filterFuntion(e);
+                          },
+                        ), // your custom widget
                       );
                     },
                     child: SvgPicture.asset(

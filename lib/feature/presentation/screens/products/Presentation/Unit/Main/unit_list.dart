@@ -1,10 +1,8 @@
 import 'package:bazrin/feature/data/API/Helper/Product/Unit/deleteUnitbyId.dart';
 import 'package:bazrin/feature/data/API/Helper/Product/Unit/getUnitList.dart';
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
-import 'package:bazrin/feature/presentation/common/classes/prettyPrint.dart';
 import 'package:bazrin/feature/presentation/screens/products/Presentation/Unit/Add/add_unit.dart';
 import 'package:bazrin/feature/presentation/screens/products/Presentation/Unit/Main/widget/unitCard.dart';
-import 'package:flutter/widgets.dart';
 
 class UnitList extends StatefulWidget {
   const UnitList({super.key});
@@ -19,6 +17,8 @@ class _UnitListState extends State<UnitList> {
   dynamic unitData;
 
   final ScrollController _scrollController = ScrollController();
+  Timer? _debounce;
+  TextEditingController searchController = TextEditingController();
   int page = 0;
   bool isLoadingMore = false;
   bool noMoreData = false;
@@ -53,7 +53,7 @@ class _UnitListState extends State<UnitList> {
   Future<void> getUnits() async {
     page = 0;
     noMoreData = false;
-    final response = await Getunitlist.getUnitList(page);
+    final response = await Getunitlist.getUnitList(page, searchController.text);
     setState(() {
       unitData = response['data'];
     });
@@ -97,6 +97,18 @@ class _UnitListState extends State<UnitList> {
     }
   }
 
+  void onSearchChanged(String value) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    setState(() {
+      searchController.text = value;
+    });
+
+    _debounce = Timer(const Duration(milliseconds: 400), () {
+      getUnits();
+      ();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -138,6 +150,49 @@ class _UnitListState extends State<UnitList> {
           children: [
             Column(
               children: [
+                Container(
+                  color: AppColors.Colorprimary,
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                  child: Expanded(
+                    child: TextField(
+                      controller: searchController,
+                      onChanged: (value) => onSearchChanged(value),
+                      decoration: InputDecoration(
+                        hint: Text(
+                          'Search with Unit Name',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.Colorprimary,
+                          ),
+                        ),
+                        suffixIcon: Icon(
+                          Icons.search,
+                          size: 25,
+                          color: AppColors.Colorprimary,
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 13,
+                          horizontal: 11,
+                        ),
+                      ),
+                      style: const TextStyle(
+                        fontSize: 14, // match your design
+                      ),
+                    ),
+                  ),
+                ),
                 SizedBox(height: 20),
 
                 Expanded(

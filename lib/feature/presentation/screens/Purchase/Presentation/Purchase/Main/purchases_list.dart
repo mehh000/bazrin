@@ -1,7 +1,9 @@
 import 'package:bazrin/feature/data/API/Helper/Purchase/deletePurchaseById.dart';
 import 'package:bazrin/feature/data/API/Helper/Purchase/getPurchase.dart';
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
+import 'package:bazrin/feature/presentation/common/classes/prettyPrint.dart';
 import 'package:bazrin/feature/presentation/screens/Purchase/Components/purchase.dart';
+import 'package:bazrin/feature/presentation/screens/Purchase/Presentation/Purchase/Filter/filter.dart';
 
 class PurchasesList extends StatefulWidget {
   const PurchasesList({super.key});
@@ -20,6 +22,12 @@ class _PurchasesListState extends State<PurchasesList> {
   bool isLoadingMore = false;
   bool noMoreData = false;
   bool isloading = false;
+
+  String supplierId = '';
+  String returntypes = '';
+  String productId = '';
+  String startMonth = '';
+  String endMonth = '';
 
   @override
   void initState() {
@@ -48,7 +56,14 @@ class _PurchasesListState extends State<PurchasesList> {
   Future<void> getPurchases() async {
     page = 0;
     noMoreData = false;
-    final response = await Getpurchase.getPurchaseList(page);
+    final response = await Getpurchase.getPurchaseList(
+      page,
+      supplierId,
+      productId,
+      '',
+      startMonth,
+      endMonth,
+    );
     setState(() {
       purchaseList = response['data'];
       isLoaded = true;
@@ -93,6 +108,17 @@ class _PurchasesListState extends State<PurchasesList> {
     }
   }
 
+  void filterFuntion(filter) {
+    setState(() {
+      supplierId = filter['supplier'];
+      productId = filter['Product'];
+      startMonth = filter['startMonth'];
+      endMonth = filter['endingMonth'];
+    });
+    getPurchases();
+    // PrettyPrint.print(filter);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -128,6 +154,29 @@ class _PurchasesListState extends State<PurchasesList> {
               fontWeight: FontWeight.w500,
             ),
           ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 10.0),
+              child: GestureDetector(
+                onTap: () {
+                  FullScreenRightDialog.open(
+                    context: context,
+                    child: PurchaseFilter(
+                      filterSubmit: (e) {
+                        filterFuntion(e);
+                      },
+                    ), // your custom widget
+                  );
+                },
+                child: SvgPicture.asset(
+                  'assets/images/icons/filter.svg',
+                  height: 28,
+                  width: 24,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
         ),
         backgroundColor: AppColors.Colorprimary,
         body: Stack(
@@ -135,71 +184,6 @@ class _PurchasesListState extends State<PurchasesList> {
             Column(
               children: [
                 // ======Header=========
-                Container(
-                  color: AppColors.Colorprimary,
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-                  child: Row(
-                    spacing: 30,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          decoration: InputDecoration(
-                            hint: Text(
-                              'Search',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.Colorprimary,
-                              ),
-                            ),
-                            suffixIcon: Icon(
-                              Icons.search,
-                              size: 25,
-                              color: AppColors.Colorprimary,
-                            ),
-                            filled: true,
-                            fillColor: Colors.white,
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(4),
-                              borderSide: BorderSide.none,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              vertical: 13,
-                              horizontal: 11,
-                            ),
-                          ),
-                          style: const TextStyle(
-                            fontSize: 14, // match your design
-                          ),
-                        ),
-                      ),
-
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            SlidePageRoute(
-                              page: Filter(),
-                              direction: SlideDirection.right,
-                            ),
-                          );
-                        },
-                        child: SvgPicture.asset(
-                          'assets/images/icons/filter.svg',
-                          height: 28,
-                          width: 24,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
                 SizedBox(height: 20),
 
                 Expanded(

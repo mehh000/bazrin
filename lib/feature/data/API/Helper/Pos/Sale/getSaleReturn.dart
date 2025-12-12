@@ -1,7 +1,10 @@
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
 
 class Getsalereturn {
-  static Future<dynamic> getSaleReturn([int page = 0]) async {
+  static Future<dynamic> getSaleReturn([
+    int page = 0,
+    String invoiceNumber = '',
+  ]) async {
     final dio = Dio(BaseOptions(baseUrl: ApiAddress.HOST_STORE));
     final accessToken = LocalStorage.box.get('accessToken');
 
@@ -13,7 +16,7 @@ class Getsalereturn {
 
     try {
       final response = await dio.get(
-        '/${shopresponse['shopNameslug']}/${shopresponse['branchNameslug']}/sale-returns?page=$page',
+        '/${shopresponse['shopNameslug']}/${shopresponse['branchNameslug']}/sale-returns?page=$page&invoiceNumber=$invoiceNumber',
         options: Options(headers: {'authorization': 'Bearer $accessToken'}),
       );
 

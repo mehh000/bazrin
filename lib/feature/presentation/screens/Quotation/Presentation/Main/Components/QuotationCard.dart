@@ -2,7 +2,6 @@ import 'package:bazrin/feature/presentation/common/classes/imports.dart';
 import 'package:bazrin/feature/presentation/common/Components/deleteDialog.dart';
 import 'package:bazrin/feature/presentation/screens/Quotation/Presentation/Main/Components/quotation_invoice.dart';
 import 'package:bazrin/feature/presentation/screens/Quotation/Presentation/View/quotation_view.dart';
-import 'package:bazrin/feature/presentation/screens/products/Presentation/CategoryList/edit_cetagory.dart';
 
 class Quotationcard extends StatefulWidget {
   final dynamic quotation;
@@ -185,12 +184,12 @@ class _QuotationcardState extends State<Quotationcard> {
               if (selected != null) {
                 // handle action here
                 if (selected == 'edit') {
-                  Navigator.of(context).push(
-                    SlidePageRoute(
-                      page: EditCetagory(),
-                      direction: SlideDirection.right,
-                    ),
-                  );
+                  // Navigator.of(context).push(
+                  //   SlidePageRoute(
+                  //     page: EditCetagory(),
+                  //     direction: SlideDirection.right,
+                  //   ),
+                  // );
                 } else if (selected == 'delete') {
                   onDelete();
                 } else if (selected == 'view') {

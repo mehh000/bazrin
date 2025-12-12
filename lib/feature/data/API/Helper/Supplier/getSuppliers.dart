@@ -1,7 +1,10 @@
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
 
 class Getsuppliers {
-  static Future<dynamic> getSuppliersList([int page = 0]) async {
+  static Future<dynamic> getSuppliersList([
+    int page = 0,
+    String name = '',
+  ]) async {
     final dio = Dio(BaseOptions(baseUrl: ApiAddress.HOST_STORE));
     final accessToken = LocalStorage.box.get('accessToken');
 
@@ -13,7 +16,7 @@ class Getsuppliers {
 
     try {
       final response = await dio.get(
-        '/${shopresponse['shopNameslug']}/${shopresponse['branchNameslug']}/suppliers?page=$page',
+        '/${shopresponse['shopNameslug']}/${shopresponse['branchNameslug']}/suppliers?page=$page&name=$name',
         options: Options(headers: {'authorization': 'Bearer $accessToken'}),
       );
 

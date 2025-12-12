@@ -1,10 +1,8 @@
 import 'package:bazrin/feature/data/API/Helper/Pos/Sale/deleteSaleReturnbyId.dart';
 import 'package:bazrin/feature/data/API/Helper/Pos/Sale/getSaleReturn.dart';
-import 'package:bazrin/feature/data/API/Helper/Pos/Sale/getSaleReturnTypes.dart';
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
-import 'package:bazrin/feature/presentation/screens/Sale/Presentation/SaleReturnTypes/Components/sale_return_type_card.dart';
 import 'package:bazrin/feature/presentation/screens/Sale/Presentation/Sales_Return/Components/sale_return_card.dart';
-import 'package:flutter/widgets.dart';
+import 'package:bazrin/feature/presentation/screens/Sale/Presentation/Sales_Return/Filter/filter.dart';
 
 class SalesReturn extends StatefulWidget {
   const SalesReturn({super.key});
@@ -16,6 +14,10 @@ class SalesReturn extends StatefulWidget {
 class _SalesReturnState extends State<SalesReturn> {
   dynamic saleReturns = [];
   final ScrollController _scrollController = ScrollController();
+
+  TextEditingController searchController = TextEditingController();
+
+  Timer? _debounce;
   int page = 0;
   bool isLoadingMore = false;
   bool noMoreData = false;
@@ -33,11 +35,13 @@ class _SalesReturnState extends State<SalesReturn> {
     getSaleReturn();
   }
 
-
   Future<void> getSaleReturn() async {
     page = 0;
     noMoreData = false;
-    final response = await Getsalereturn.getSaleReturn(page);
+    final response = await Getsalereturn.getSaleReturn(
+      page,
+      searchController.text,
+    );
     setState(() {
       saleReturns = response['data'];
     });
@@ -81,11 +85,21 @@ class _SalesReturnState extends State<SalesReturn> {
     getSaleReturn();
   }
 
+  void onSearchChanged(String value) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    setState(() {
+      searchController.text = value;
+    });
+
+    _debounce = Timer(const Duration(milliseconds: 400), () {
+      getSaleReturn();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        
         appBar: AppBar(
           backgroundColor: AppColors.Colorprimary,
           leading: Row(
@@ -127,9 +141,11 @@ class _SalesReturnState extends State<SalesReturn> {
                 children: [
                   Expanded(
                     child: TextField(
+                      controller: searchController,
+                      onChanged: (value) => onSearchChanged(value),
                       decoration: InputDecoration(
                         hint: Text(
-                          'Search',
+                          'Search With Invoice Number ',
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
@@ -164,11 +180,11 @@ class _SalesReturnState extends State<SalesReturn> {
 
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context).push(
-                        SlidePageRoute(
-                          page: Filter(),
-                          direction: SlideDirection.right,
-                        ),
+                      FullScreenRightDialog.open(
+                        context: context,
+                        child: SalesReturnFilter(
+                          filterSubmit: (f) {},
+                        ), // your custom widget
                       );
                     },
                     child: SvgPicture.asset(

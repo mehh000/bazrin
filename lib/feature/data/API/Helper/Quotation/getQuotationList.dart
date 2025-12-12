@@ -1,7 +1,10 @@
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
 
 class Getquotationlist {
-  static Future<dynamic> getQuotationList([int page = 0]) async {
+  static Future<dynamic> getQuotationList([
+    int page = 0,
+    String quotationNumber = '',
+  ]) async {
     final dio = Dio(BaseOptions(baseUrl: ApiAddress.HOST_STORE));
     final accessToken = LocalStorage.box.get('accessToken');
 
@@ -13,7 +16,7 @@ class Getquotationlist {
 
     try {
       final response = await dio.get(
-        '/${shopresponse['shopNameslug']}/${shopresponse['branchNameslug']}/quotations?page=$page',
+        '/${shopresponse['shopNameslug']}/${shopresponse['branchNameslug']}/quotations?page=$page&quotationNumber=$quotationNumber',
         options: Options(headers: {'authorization': 'Bearer $accessToken'}),
       );
 

@@ -1,5 +1,4 @@
 import 'package:bazrin/feature/data/API/Helper/Supplier/suppliersPayments.dart';
-import 'package:bazrin/feature/presentation/common/Components/FullScreenRightDIalog.dart';
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
 import 'package:bazrin/feature/presentation/common/classes/prettyPrint.dart';
 import 'package:bazrin/feature/presentation/screens/supplier/Presentation/PurchaseDue/Filter/filter.dart';
@@ -15,10 +14,14 @@ class SupplierPurchaseDueList extends StatefulWidget {
 class _SupplierPurchaseDueListState extends State<SupplierPurchaseDueList> {
   dynamic advacneList;
   final ScrollController _scrollController = ScrollController();
+  TextEditingController searchController = TextEditingController();
   int page = 0;
   bool isLoadingMore = false;
   bool noMoreData = false;
   bool isloading = false;
+  Timer? _debounce;
+  String supplierID = '';
+  String accountID = '';
 
   @override
   void initState() {
@@ -39,6 +42,9 @@ class _SupplierPurchaseDueListState extends State<SupplierPurchaseDueList> {
     final response = await Supplierspayments.getSupplierPayments(
       'PURCHASE_DUE_PAYMENT',
       page,
+      searchController.text,
+      supplierID,
+      accountID,
     );
     setState(() {
       advacneList = response['data'];
@@ -75,8 +81,26 @@ class _SupplierPurchaseDueListState extends State<SupplierPurchaseDueList> {
     isLoadingMore = false;
   }
 
+  void onSearchChanged(String text) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    setState(() {
+      searchController.text = text;
+    });
+
+    _debounce = Timer(const Duration(milliseconds: 400), () {
+      // Call your API here
+      // searchApi(text);
+      getAdvance();
+    });
+  }
+
   void filterFuntion(filter) {
-    PrettyPrint.print(filter);
+    setState(() {
+      accountID = filter['account'];
+      supplierID = filter['supplier'];
+    });
+    getAdvance();
+    // PrettyPrint.print(filter);
   }
 
   @override
@@ -123,9 +147,11 @@ class _SupplierPurchaseDueListState extends State<SupplierPurchaseDueList> {
                 children: [
                   Expanded(
                     child: TextField(
+                      controller: searchController,
+                      onChanged: (value) => onSearchChanged(value),
                       decoration: InputDecoration(
                         hint: Text(
-                          'Search',
+                          'Search With InvoiceNumber',
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w400,

@@ -1,11 +1,8 @@
 import 'package:bazrin/feature/data/API/Helper/Supplier/deleteSupplier.dart';
 import 'package:bazrin/feature/data/API/Helper/Supplier/getSuppliers.dart';
-import 'package:bazrin/feature/presentation/common/Components/pagination.dart';
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
-
 import 'package:bazrin/feature/presentation/screens/supplier/Presentation/Supplier/Add/add_supplier.dart';
 import 'package:bazrin/feature/presentation/screens/supplier/Components/supplier.dart';
-import 'package:flutter/material.dart';
 
 class SupplierList extends StatefulWidget {
   const SupplierList({super.key});
@@ -19,10 +16,12 @@ class _SupplierListState extends State<SupplierList> {
   bool isloaded = true;
   dynamic suppliers;
   final ScrollController _scrollController = ScrollController();
+  TextEditingController searchController = TextEditingController();
   int page = 0;
   bool isLoadingMore = false;
   bool noMoreData = false;
   bool isloading = false;
+  Timer? _debounce;
 
   @override
   void initState() {
@@ -79,14 +78,27 @@ class _SupplierListState extends State<SupplierList> {
     page = 0;
     noMoreData = false;
     setState(() => isloading = true);
-    final res = await Getsuppliers.getSuppliersList(page);
-    // final List<Map<String, dynamic>> supplierList = (res as List)
-    //     .map((e) => Map<String, dynamic>.from(e))
-    //     .toList();
+    final res = await Getsuppliers.getSuppliersList(
+      page,
+      searchController.text,
+    );
 
     setState(() {
       suppliers = res['data'];
       isloading = false;
+    });
+  }
+
+  void onSearchChanged(String text) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    setState(() {
+      searchController.text = text;
+    });
+
+    _debounce = Timer(const Duration(milliseconds: 400), () {
+      // Call your API here
+      // searchApi(text);
+      getSupplie();
     });
   }
 
@@ -153,9 +165,13 @@ class _SupplierListState extends State<SupplierList> {
                     children: [
                       Expanded(
                         child: TextField(
+                          controller: searchController,
+                          onChanged: (name) {
+                            onSearchChanged(name);
+                          },
                           decoration: InputDecoration(
                             hint: Text(
-                              'Search',
+                              'Search with supplier name',
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w400,

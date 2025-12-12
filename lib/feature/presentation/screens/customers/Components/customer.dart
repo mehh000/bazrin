@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
 import 'package:bazrin/feature/presentation/common/Components/deleteDialog.dart';
 import 'package:bazrin/feature/presentation/screens/customers/Presentation/Customer/Add/add_return_due_dismiss.dart';
@@ -219,11 +221,11 @@ class _CustomerState extends State<Customer> {
                       ),
                     ),
                     PopupMenuItem<String>(
-                      value: 'ledger',
+                      value: 'ledger_page',
                       child: Row(
                         children: [
                           const SizedBox(width: 8),
-                          const Text('Ledger'),
+                          const Text('ledger'),
                         ],
                       ),
                     ),
@@ -278,20 +280,26 @@ class _CustomerState extends State<Customer> {
                         direction: SlideDirection.right,
                       ),
                     );
-                  } else if (selected == 'ledger') {
+                  } else if (selected == 'ledger_page') {
                     Navigator.of(context).push(
                       SlidePageRoute(
                         page: LedgerCustomer(id: cus),
                         direction: SlideDirection.right,
                       ),
                     );
+                  } else {
+                    Navigator.of(context).pop();
                   }
                 }
               },
-              child: Image.asset(
-                'assets/images/3dot.png',
-                height: 16,
-                width: 16,
+              child: Container(
+                color: Colors.white,
+                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+                child: Image.asset(
+                  'assets/images/3dot.png',
+                  height: 16,
+                  width: 16,
+                ),
               ),
             ),
           ],

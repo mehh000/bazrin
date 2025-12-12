@@ -5,7 +5,7 @@ import 'package:bazrin/feature/presentation/screens/Promotion/flash_sale_list.da
 import 'package:bazrin/feature/presentation/screens/supplier/Presentation/PurchaseDismiss/Main/purchase_dismiss_list.dart';
 import 'package:bazrin/feature/presentation/screens/supplier/Presentation/PurchaseDue/Main/supplier_purchase_due_list.dart';
 import 'package:bazrin/feature/presentation/screens/supplier/Presentation/ReturnDismiss/Main/return_dismiss_list.dart';
-import 'package:bazrin/feature/presentation/screens/supplier/Presentation/ReturnDue/Main/return_due_list.dart';
+import 'package:bazrin/feature/presentation/screens/supplier/Presentation/ReturnDuePaid/Main/return_due_list.dart';
 
 class DrawerContainer extends StatefulWidget {
   final dynamic shop;
@@ -104,16 +104,16 @@ class _DrawerContainerState extends State<DrawerContainer> {
         {'title': 'Add Quotation', 'path': AddQuation()},
       ],
     },
-    {
-      'title': 'Inventory',
-      'icon': 'assets/images/icons/account.svg',
-      'subItems': [
-        {'title': 'Available Stocks', 'path': AvailableStocks()},
-        {'title': 'Stocks Movemenrt', 'path': StocksMovement()},
-        {'title': 'Stocks Adjustment', 'path': StocksAdjustment()},
-        {'title': 'Stocks Adjustment Types', 'path': ''},
-      ],
-    },
+    // {
+    //   'title': 'Inventory',
+    //   'icon': 'assets/images/icons/account.svg',
+    //   'subItems': [
+    //     {'title': 'Available Stocks', 'path': AvailableStocks()},
+    //     {'title': 'Stocks Movemenrt', 'path': StocksMovement()},
+    //     {'title': 'Stocks Adjustment', 'path': StocksAdjustment()},
+    //     {'title': 'Stocks Adjustment Types', 'path': ''},
+    //   ],
+    // },
     {
       'title': 'Account',
       'icon': 'assets/images/icons/account.svg',
@@ -130,39 +130,39 @@ class _DrawerContainerState extends State<DrawerContainer> {
         {'title': 'Expense Categoris', 'path': ExpenseCategoryList()},
       ],
     },
-    {
-      'title': 'Role',
-      'icon': 'assets/images/icons/role.svg',
-      'subItems': [
-        {'title': 'Role List', 'path': RoleList()},
-      ],
-    },
-    {
-      'title': 'Staff',
-      'icon': 'assets/images/icons/staff.svg',
-      'subItems': [
-        {'title': 'Staff List', 'path': StaffList()},
-        {'title': 'Invitation List', 'path': InvitationList()},
-      ],
-    },
-    {
-      'title': 'Promotion',
-      'icon': 'assets/images/icons/promotion.svg',
-      'subItems': [
-        {'title': 'Flash Sale List', 'path': FlashSaleList()},
-      ],
-    },
-    {
-      'title': 'Settings',
-      'icon': 'assets/images/icons/settings.svg',
-      'subItems': [
-        {'title': 'Store Settings', 'path': StoreSettings()},
-        {'title': 'Invoice Settings', 'path': InvoiceSetting()},
-        {'title': 'Packaging ', 'path': Packaging()},
-        {'title': 'Point System', 'path': PointSystem()},
-        {'title': 'Vat Setting', 'path': VatSetting()},
-      ],
-    },
+    // {
+    //   'title': 'Role',
+    //   'icon': 'assets/images/icons/role.svg',
+    //   'subItems': [
+    //     {'title': 'Role List', 'path': RoleList()},
+    //   ],
+    // },
+    // {
+    //   'title': 'Staff',
+    //   'icon': 'assets/images/icons/staff.svg',
+    //   'subItems': [
+    //     {'title': 'Staff List', 'path': StaffList()},
+    //     {'title': 'Invitation List', 'path': InvitationList()},
+    //   ],
+    // },
+    // {
+    //   'title': 'Promotion',
+    //   'icon': 'assets/images/icons/promotion.svg',
+    //   'subItems': [
+    //     {'title': 'Flash Sale List', 'path': FlashSaleList()},
+    //   ],
+    // },
+    // {
+    //   'title': 'Settings',
+    //   'icon': 'assets/images/icons/settings.svg',
+    //   'subItems': [
+    //     {'title': 'Store Settings', 'path': StoreSettings()},
+    //     {'title': 'Invoice Settings', 'path': InvoiceSetting()},
+    //     {'title': 'Packaging ', 'path': Packaging()},
+    //     {'title': 'Point System', 'path': PointSystem()},
+    //     {'title': 'Vat Setting', 'path': VatSetting()},
+    //   ],
+    // },
   ];
 
   @override

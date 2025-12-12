@@ -17,7 +17,8 @@ class _PurchaseDueFilterState extends State<PurchaseDueFilter> {
   List<Map<String, dynamic>> suppliers = [];
   final ScrollController accountScroll = ScrollController();
   final ScrollController supplierScroll = ScrollController();
-  TextEditingController invoiceNumber = TextEditingController();
+  TextEditingController accountsearchController = TextEditingController();
+  TextEditingController suppliersearchController = TextEditingController();
 
   int accountPage = 0;
   int supplierPage = 0;
@@ -27,6 +28,7 @@ class _PurchaseDueFilterState extends State<PurchaseDueFilter> {
   bool noMoreDataForAccount = false;
   bool noMoreDataForSupplier = false;
   bool isloading = false;
+  Timer? _debounce;
 
   dynamic selectedAccount = {};
   dynamic selectedSupplier = {};
@@ -56,7 +58,10 @@ class _PurchaseDueFilterState extends State<PurchaseDueFilter> {
     accountPage = 0;
     noMoreDataForAccount = false;
     try {
-      final response = await Getaccountlist.getAccountsList(accountPage);
+      final response = await Getaccountlist.getAccountsList(
+        accountPage,
+        accountsearchController.text,
+      );
 
       // Safely cast and convert
       final List<Map<String, dynamic>> parsedList = (response['data'] as List)
@@ -64,10 +69,12 @@ class _PurchaseDueFilterState extends State<PurchaseDueFilter> {
           .toList();
 
       setState(() {
-        accountList = parsedList;
+        if (accountPage == 0) {
+          accountList = parsedList;
+        } else {
+          accountList = [...accountList, ...parsedList];
+        }
       });
-
-      // print('accounts data : $accountList');
     } catch (e) {
       // print('Error loading categories: $e');
     }
@@ -105,14 +112,29 @@ class _PurchaseDueFilterState extends State<PurchaseDueFilter> {
     noMoreDataForSupplier = false;
     setState(() => isloading = true);
 
-    final res = await Getsuppliers.getSuppliersList(supplierPage);
+    final res = await Getsuppliers.getSuppliersList(
+      supplierPage,
+      suppliersearchController.text,
+    );
 
     // FIX: force convert dynamic list → List<Map<String, dynamic>>
     final List<Map<String, dynamic>> parsedSuppliers =
         List<Map<String, dynamic>>.from(res['data'] ?? []);
 
+    // setState(() {
+    //   suppliers = [...parsedSuppliers, ...suppliers];
+    //   isloading = false;
+    // });
+
     setState(() {
-      suppliers = [...suppliers, ...parsedSuppliers];
+      if (supplierPage == 0) {
+        // SEARCH → replace
+        suppliers = parsedSuppliers;
+      } else {
+        // PAGINATION → append
+        suppliers = [...suppliers, ...parsedSuppliers];
+      }
+
       isloading = false;
     });
   }
@@ -147,13 +169,36 @@ class _PurchaseDueFilterState extends State<PurchaseDueFilter> {
 
   void submitFilter() {
     dynamic filterData = {
-      "invoiceNumber": invoiceNumber.text,
-      "account": selectedAccount,
-      "supplier": selectedSupplier,
+      "account": selectedAccount['id'] ?? '',
+      "supplier": selectedSupplier['id'],
     };
     widget.filterSubmit(filterData);
     Navigator.of(context).pop();
     // PrettyPrint.print(filterData);
+  }
+
+  void cleanFilterData() {}
+
+  void onSearchAccountChanged(String value) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    setState(() {
+      accountsearchController.text = value;
+    });
+
+    _debounce = Timer(const Duration(milliseconds: 400), () {
+      getacconts();
+    });
+  }
+
+  void onSearchSupplierChanged(String value) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    setState(() {
+      suppliersearchController.text = value;
+    });
+
+    _debounce = Timer(const Duration(milliseconds: 400), () {
+      getSupplie();
+    });
   }
 
   @override
@@ -163,7 +208,8 @@ class _PurchaseDueFilterState extends State<PurchaseDueFilter> {
       height: double.infinity,
       // padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       decoration: BoxDecoration(
-        color: Color(0xFFF5F5F7),
+        // color: Color(0xFFF5F5F7),
+        color: Colors.white,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),
@@ -182,14 +228,6 @@ class _PurchaseDueFilterState extends State<PurchaseDueFilter> {
                   spacing: 13,
                   children: [
                     SizedBox(height: 20),
-                    InputComponent(
-                      preicon: true,
-                      hintitle: 'Search invoice number',
-                      islabel: true,
-                      label: "Invoice Number",
-                      spcae: 12,
-                      controller: invoiceNumber,
-                    ),
                     Text(
                       'Account',
                       style: TextStyle(
@@ -200,13 +238,14 @@ class _PurchaseDueFilterState extends State<PurchaseDueFilter> {
                     ),
                     SearchDropdown(
                       items: accountList,
+                      textController: accountsearchController,
+                      searchOnchanged: (value) => onSearchAccountChanged(value),
                       getter: "type",
                       hint: "search Account",
                       onChanged: (e) {
                         setState(() {
                           selectedAccount = e;
                         });
-                        // PrettyPrint.print(e);
                       },
                       scrollController: accountScroll,
                     ),
@@ -225,6 +264,8 @@ class _PurchaseDueFilterState extends State<PurchaseDueFilter> {
                         selectedSupplier = e;
                       },
                       scrollController: supplierScroll,
+                      searchOnchanged: (value) =>
+                          onSearchSupplierChanged(value),
                     ),
                   ],
                 ),

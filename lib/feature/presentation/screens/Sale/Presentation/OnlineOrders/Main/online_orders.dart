@@ -1,5 +1,6 @@
 import 'package:bazrin/feature/data/API/Helper/Pos/Online/getOnlineOrders.dart';
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
+import 'package:bazrin/feature/presentation/screens/Sale/Presentation/OnlineOrders/Filter/filter.dart';
 import 'package:bazrin/feature/presentation/screens/Sale/Presentation/OnlineOrders/Main/Components/orline_order_card.dart';
 
 class OnlineOrders extends StatefulWidget {
@@ -148,11 +149,11 @@ class _OnlineOrdersState extends State<OnlineOrders> {
 
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context).push(
-                        SlidePageRoute(
-                          page: Filter(),
-                          direction: SlideDirection.right,
-                        ),
+                      FullScreenRightDialog.open(
+                        context: context,
+                        child: OnlineOrdersFilter(
+                          filterSubmit: (f) {},
+                        ), // your custom widget
                       );
                     },
                     child: SvgPicture.asset(

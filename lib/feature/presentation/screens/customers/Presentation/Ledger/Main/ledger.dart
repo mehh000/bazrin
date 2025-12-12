@@ -1,79 +1,29 @@
-import 'package:bazrin/feature/data/API/Helper/Supplier/suppliersPayments.dart';
+import 'package:bazrin/feature/data/API/Helper/Customer/getCustomerLedger.dart';
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
-import 'package:bazrin/feature/presentation/screens/supplier/Presentation/PurchaseDue/Components/supplier_purchase_due_card.dart';
-import 'package:bazrin/feature/presentation/screens/supplier/Presentation/PurchaseDismiss/Components/supplier_purchase_dismiss_card.dart';
-import 'package:bazrin/feature/presentation/screens/supplier/Presentation/ReturnDue/Components/supplier_return_due_card.dart';
-import 'package:bazrin/feature/presentation/screens/supplier/Presentation/Supplier/Filter/filter.dart';
-import 'package:flutter/material.dart';
+import 'package:bazrin/feature/presentation/screens/customers/Components/ledgerCard.dart';
+import 'package:bazrin/feature/presentation/screens/customers/Presentation/Ledger/Filter/filter.dart';
 
-class ReturnDueList extends StatefulWidget {
-  const ReturnDueList({super.key});
+class LedgerCustomer extends StatefulWidget {
+  final String id;
+  const LedgerCustomer({super.key, required this.id});
 
   @override
-  State<ReturnDueList> createState() => _ReturnDueListState();
+  State<LedgerCustomer> createState() => _LedgerCustomerState();
 }
 
-class _ReturnDueListState extends State<ReturnDueList> {
-  dynamic advacneList;
-  final ScrollController _scrollController = ScrollController();
-  int page = 0;
-  bool isLoadingMore = false;
-  bool noMoreData = false;
-  bool isloading = false;
-
+class _LedgerCustomerState extends State<LedgerCustomer> {
+  dynamic customerLedger = [];
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
-        loadMore();
-      }
-    });
-    getAdvance();
+    getledger();
   }
 
-  void getAdvance() async {
-    page = 0;
-    noMoreData = false;
-    final response = await Supplierspayments.getSupplierPayments(
-      'PURCHASE_RETURN_DUE_PAYMENT',
-      page,
-    );
+  Future<void> getledger() async {
+    final response = await Getcustomeredger.getCustomerLedgerList(widget.id);
     setState(() {
-      advacneList = response['data'];
+      customerLedger = response;
     });
-    // print('advance : ${response[0]}');
-  }
-
-  Future<void> loadMore() async {
-    if (isLoadingMore || noMoreData) return;
-
-    isLoadingMore = true;
-    page++;
-
-    final response = await Supplierspayments.getSupplierPayments(
-      'PURCHASE_RETURN_DUE_PAYMENT',
-      page,
-    );
-
-    int totalPage = response["totalPage"];
-    List<dynamic> newData = response["data"];
-
-    if (newData.isEmpty || page >= totalPage) {
-      noMoreData = true;
-    }
-
-    // Convert safely
-    final List<Map<String, dynamic>> parsedNew =
-        List<Map<String, dynamic>>.from(newData);
-
-    setState(() {
-      advacneList.addAll(parsedNew);
-    });
-
-    isLoadingMore = false;
   }
 
   @override
@@ -99,7 +49,7 @@ class _ReturnDueListState extends State<ReturnDueList> {
             ],
           ),
           title: Text(
-            'Return Due Paid',
+            'Ledger',
             style: TextStyle(
               color: Colors.white,
               fontSize: 16,
@@ -157,11 +107,11 @@ class _ReturnDueListState extends State<ReturnDueList> {
 
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context).push(
-                        SlidePageRoute(
-                          page: FilterAdvance(),
-                          direction: SlideDirection.right,
-                        ),
+                      FullScreenRightDialog.open(
+                        context: context,
+                        child: LedgerCustomerFilter(
+                          filterSubmit: (f) {},
+                        ), // your custom widget
                       );
                     },
                     child: SvgPicture.asset(
@@ -174,6 +124,7 @@ class _ReturnDueListState extends State<ReturnDueList> {
                 ],
               ),
             ),
+
             SizedBox(height: 20),
 
             Expanded(
@@ -188,31 +139,15 @@ class _ReturnDueListState extends State<ReturnDueList> {
                   ),
                 ),
                 child: RefreshIndicator(
-                  onRefresh: () async {
-                    getAdvance();
-                  },
-                  child: ListView.separated(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    controller: _scrollController,
-                    separatorBuilder: (context, index) =>
-                        const SizedBox(height: 5),
-
-                    itemCount: advacneList?.length ?? 0,
-
-                    itemBuilder: (context, index) {
-                      if (index == advacneList.length) {
-                        return isLoadingMore
-                            ? const Padding(
-                                padding: EdgeInsets.all(16),
-                                child: Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              )
-                            : SizedBox.shrink();
-                      }
-                      final ad = advacneList[index];
-                      return SupplierReturnDuePaidCard(ret: ad);
-                    },
+                  onRefresh: getledger,
+                  child: SingleChildScrollView(
+                    physics: AlwaysScrollableScrollPhysics(),
+                    child: Column(
+                      spacing: 5,
+                      children: customerLedger
+                          .map<Widget>((led) => CustomerLedgercard(led: led))
+                          .toList(),
+                    ),
                   ),
                 ),
               ),

@@ -1,7 +1,6 @@
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
 import 'package:bazrin/feature/presentation/common/Components/deleteDialog.dart';
 import 'package:bazrin/feature/presentation/screens/products/Presentation/Brand/Edit/edit_brand.dart';
-import 'package:bazrin/feature/presentation/screens/products/Presentation/CategoryList/edit_cetagory.dart';
 import 'package:bazrin/feature/presentation/screens/products/Presentation/Product/View/view_product.dart';
 import 'package:flutter/material.dart';
 

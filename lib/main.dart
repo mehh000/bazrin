@@ -1,4 +1,5 @@
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

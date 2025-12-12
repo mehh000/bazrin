@@ -4,9 +4,11 @@ class SearchDropdown extends StatefulWidget {
   final List<Map<String, dynamic>> items;
   final ScrollController scrollController;
   final Function(Map<String, String>) onChanged;
+  final Function(String)? searchOnchanged;
   final bool isBorder;
   final String hint;
   final String getter;
+  final TextEditingController? textController;
 
   const SearchDropdown({
     super.key,
@@ -16,6 +18,8 @@ class SearchDropdown extends StatefulWidget {
     this.isBorder = true,
     this.hint = "search",
     this.getter = "name",
+    this.textController,
+    this.searchOnchanged,
   });
 
   @override
@@ -24,7 +28,7 @@ class SearchDropdown extends StatefulWidget {
 
 class _SearchDropdownState extends State<SearchDropdown> {
   final LayerLink _layerLink = LayerLink();
-  final TextEditingController _controller = TextEditingController();
+  final TextEditingController textController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
 
   OverlayEntry? _overlayEntry;
@@ -43,7 +47,7 @@ class _SearchDropdownState extends State<SearchDropdown> {
         .toList();
 
     // Update filtering when user types
-    _controller.addListener(() {
+    textController.addListener(() {
       filterList();
       updateOverlay();
     });
@@ -83,7 +87,7 @@ class _SearchDropdownState extends State<SearchDropdown> {
   }
 
   void filterList() {
-    final query = _controller.text.toLowerCase();
+    final query = textController.text.toLowerCase();
 
     setState(() {
       filteredList = widget.items
@@ -114,7 +118,7 @@ class _SearchDropdownState extends State<SearchDropdown> {
   @override
   void dispose() {
     closeOverlay();
-    _controller.dispose();
+    textController.dispose();
     _focusNode.dispose();
     super.dispose();
   }
@@ -149,7 +153,7 @@ class _SearchDropdownState extends State<SearchDropdown> {
                       dense: true,
                       title: Text(item[widget.getter]!),
                       onTap: () {
-                        _controller.text = item[widget.getter]!;
+                        textController.text = item[widget.getter]!;
                         widget.onChanged(item);
 
                         closeOverlay();
@@ -172,8 +176,12 @@ class _SearchDropdownState extends State<SearchDropdown> {
     return CompositedTransformTarget(
       link: _layerLink,
       child: TextField(
-        controller: _controller,
+        controller: textController,
         focusNode: _focusNode,
+        onChanged: (value) {
+          widget.searchOnchanged?.call(value);
+        },
+
         decoration: InputDecoration(
           hintText: widget.hint,
           suffixIcon: const Icon(Icons.arrow_drop_down),

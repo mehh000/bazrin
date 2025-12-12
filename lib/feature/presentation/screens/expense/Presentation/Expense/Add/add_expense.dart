@@ -3,7 +3,6 @@ import 'package:bazrin/feature/data/API/Helper/Expense/addExpense.dart';
 import 'package:bazrin/feature/data/API/Helper/Expense/getExpenseCategoryList.dart';
 import 'package:bazrin/feature/data/API/Helper/Expense/getExpenseProductsList.dart';
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
-import 'package:bazrin/feature/presentation/common/classes/prettyPrint.dart';
 import 'package:bazrin/feature/presentation/common/Components/customdropdown.dart';
 import 'package:bazrin/feature/presentation/common/Components/search_dropdown.dart';
 import 'package:bazrin/feature/presentation/screens/expense/Presentation/Expense/Add/Components/selected_product_card.dart';
@@ -40,7 +39,7 @@ class _AddExpenseState extends State<AddExpense> {
   double sum = 0;
 
   // infinit scroll for category
-  final ScrollController cat_scrollController = ScrollController(); 
+  final ScrollController cat_scrollController = ScrollController();
   int catpage = 0;
   bool noMoreDatacat = false;
   bool isLoadingMorecat = false;
@@ -565,7 +564,7 @@ class _AddExpenseState extends State<AddExpense> {
                                       isBorder: false,
                                       dropDownSearchController:
                                           _paytypeSearchController,
-                                      hint: 'MFS- Ayesha Telecom',
+                                      hint: 'Payment Accounts',
                                       getterName: 'type',
                                       addButtonTitle: 'Add New Account',
                                       onChanged: (e) {

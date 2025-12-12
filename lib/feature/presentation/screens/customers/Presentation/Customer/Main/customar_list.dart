@@ -16,8 +16,11 @@ class _CustomarListState extends State<CustomarList> {
   bool _isExpanded = false;
   dynamic customers = [];
   bool isloaded = true;
+  Timer? _debounce;
 
   final ScrollController _scrollController = ScrollController();
+  TextEditingController searchController = TextEditingController();
+
   int page = 0;
   bool isLoadingMore = false;
   bool noMoreData = false;
@@ -51,7 +54,10 @@ class _CustomarListState extends State<CustomarList> {
   Future<void> getCustomerList() async {
     page = 0;
     noMoreData = false;
-    final response = await Getcustomers.getCustomersList(page);
+    final response = await Getcustomers.getCustomersList(
+      page,
+      searchController.text,
+    );
     setState(() {
       customers = response["data"];
       isloaded = false;
@@ -101,6 +107,17 @@ class _CustomarListState extends State<CustomarList> {
     }
   }
 
+  void onSearchChanged(String text) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    setState(() {
+      searchController.text = text;
+    });
+
+    _debounce = Timer(const Duration(milliseconds: 400), () {
+      getCustomerList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -147,64 +164,43 @@ class _CustomarListState extends State<CustomarList> {
                   color: AppColors.Colorprimary,
                   width: double.infinity,
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-                  child: Row(
-                    spacing: 30,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          decoration: InputDecoration(
-                            hint: Text(
-                              'Search',
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.Colorprimary,
-                              ),
-                            ),
-                            suffixIcon: Icon(
-                              Icons.search,
-                              size: 25,
-                              color: AppColors.Colorprimary,
-                            ),
-                            filled: true,
-                            fillColor: Colors.white,
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(4),
-                              borderSide: BorderSide.none,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              vertical: 13,
-                              horizontal: 11,
-                            ),
-                          ),
-                          style: const TextStyle(
-                            fontSize: 14, // match your design
+                  child: Expanded(
+                    child: TextField(
+                      onChanged: (value) => onSearchChanged(value),
+                      controller: searchController,
+                      decoration: InputDecoration(
+                        hint: Text(
+                          'Search With Customer Name',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.Colorprimary,
                           ),
                         ),
-                      ),
-
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            SlidePageRoute(
-                              page: Filter(),
-                              direction: SlideDirection.right,
-                            ),
-                          );
-                        },
-                        child: SvgPicture.asset(
-                          'assets/images/icons/filter.svg',
-                          height: 28,
-                          width: 24,
-                          color: Colors.white,
+                        suffixIcon: Icon(
+                          Icons.search,
+                          size: 25,
+                          color: AppColors.Colorprimary,
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(4),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 13,
+                          horizontal: 11,
                         ),
                       ),
-                    ],
+                      style: const TextStyle(
+                        fontSize: 14, // match your design
+                      ),
+                    ),
                   ),
                 ),
 

@@ -1,5 +1,6 @@
 import 'package:bazrin/feature/presentation/common/Components/deleteDialog.dart';
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
+import 'package:bazrin/feature/presentation/screens/Account/Presentation/Add/add_account.dart';
 
 class Accountcard extends StatefulWidget {
   final dynamic account;
@@ -113,12 +114,12 @@ class _AccountcardState extends State<Accountcard> {
               ),
               GestureDetector(
                 onTap: () {
-                  // Navigator.of(context).push(
-                  //   SlidePageRoute(
-                  //     page: EditExpenseCategory(catData: cat),
-                  //     direction: SlideDirection.right,
-                  //   ),
-                  // );
+                  Navigator.of(context).push(
+                    SlidePageRoute(
+                      page: AddAccount(),
+                      direction: SlideDirection.right,
+                    ),
+                  );
                 },
                 child: StatusContainer(
                   bgColor: AppColors.Colorprimary,
