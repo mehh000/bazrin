@@ -4,7 +4,6 @@ import 'package:bazrin/feature/presentation/common/classes/imports.dart';
 import 'package:bazrin/feature/presentation/common/classes/prettyPrint.dart';
 import 'package:bazrin/feature/presentation/screens/Sale/Presentation/ManageSales/Filter/filter.dart';
 import 'package:bazrin/feature/presentation/screens/Sale/Presentation/ManageSales/Main/Components/manage_sell_card.dart';
-import 'package:flutter/widgets.dart';
 
 class ManageSales extends StatefulWidget {
   const ManageSales({super.key});
@@ -21,6 +20,12 @@ class _ManageSalesState extends State<ManageSales> {
   bool isLoadingMore = false;
   bool noMoreData = false;
   bool isloading = false;
+
+  String startMonth = '';
+  String endMonth = '';
+
+  String customerId = '';
+  String saleType = '';
 
   @override
   void initState() {
@@ -41,7 +46,13 @@ class _ManageSalesState extends State<ManageSales> {
       isloading = true;
     });
 
-    final response = await Getpossale.getPosSale(page);
+    final response = await Getpossale.getPosSale(
+      page,
+      saleType,
+      startMonth,
+      endMonth,
+      customerId,
+    );
     setState(() {
       sales = response['data'];
       isloading = false;
@@ -86,6 +97,17 @@ class _ManageSalesState extends State<ManageSales> {
     getSales();
   }
 
+  void filterFuntion(filter) {
+    setState(() {
+      saleType = filter['saleType'];
+      customerId = filter['Customer'];
+      startMonth = filter['startMonth'];
+      endMonth = filter['endingMonth'];
+    });
+    getSales();
+    // PrettyPrint.print(filter);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -123,7 +145,11 @@ class _ManageSalesState extends State<ManageSales> {
                 onTap: () {
                   FullScreenRightDialog.open(
                     context: context,
-                    child: ManageSalesFilter(filterSubmit: (f) {}),
+                    child: ManageSalesFilter(
+                      filterSubmit: (f) {
+                        filterFuntion(f);
+                      },
+                    ),
                   );
                 },
                 child: SvgPicture.asset(

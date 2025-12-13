@@ -4,6 +4,9 @@ class Getsalereturn {
   static Future<dynamic> getSaleReturn([
     int page = 0,
     String invoiceNumber = '',
+    String customerId = '',
+    String startDate = '',
+    String endDate = '',
   ]) async {
     final dio = Dio(BaseOptions(baseUrl: ApiAddress.HOST_STORE));
     final accessToken = LocalStorage.box.get('accessToken');
@@ -16,7 +19,7 @@ class Getsalereturn {
 
     try {
       final response = await dio.get(
-        '/${shopresponse['shopNameslug']}/${shopresponse['branchNameslug']}/sale-returns?page=$page&invoiceNumber=$invoiceNumber',
+        '/${shopresponse['shopNameslug']}/${shopresponse['branchNameslug']}/sale-returns?page=$page&invoiceNumber=$invoiceNumber&customerId=$customerId&startDate=$startDate&endDate=$endDate',
         options: Options(headers: {'authorization': 'Bearer $accessToken'}),
       );
 

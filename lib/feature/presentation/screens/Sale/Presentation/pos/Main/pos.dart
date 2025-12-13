@@ -46,7 +46,11 @@ class _PosState extends State<Pos> {
     noMoreData = false;
     setState(() => isloading = true);
 
-    final response = await Getposproductlist.getPosProductList(page);
+    final response = await Getposproductlist.getPosProductList(
+      page,
+      categoryId,
+      brandId,
+    );
 
     setState(() {
       posItems = response;
@@ -99,7 +103,6 @@ class _PosState extends State<Pos> {
 
   void filterFuntion(filter) {
     setState(() {
-      productId = filter['Product'];
       categoryId = filter['category'];
       brandId = filter['brand'];
     });

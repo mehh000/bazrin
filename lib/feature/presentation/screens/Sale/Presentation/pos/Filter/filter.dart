@@ -223,7 +223,7 @@ class _PosFilterState extends State<PosFilter> {
 
   void submitFilter() {
     dynamic filterData = {
-      "Product": selectedProduct['id'] ?? "",
+      // "Product": selectedProduct['id'] ?? "",
       "category": selectedCategory['id'] ?? "",
       "brand": selectedBrand['id'] ?? "",
     };
@@ -295,24 +295,23 @@ class _PosFilterState extends State<PosFilter> {
                   children: [
                     SizedBox(height: 20),
 
-                    Text(
-                      'Product',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16,
-                        color: AppColors.colorBlack,
-                      ),
-                    ),
-                    SearchDropdown(
-                      items: isloading ? [] : product,
-                      hint: "search Product",
-                      onChanged: (e) {
-                        selectedProduct = e;
-                      },
-                      scrollController: productcroll,
-                      searchOnchanged: (value) => onSearchProductChanged(value),
-                    ),
-
+                    // Text(
+                    //   'Product',
+                    //   style: TextStyle(
+                    //     fontWeight: FontWeight.w500,
+                    //     fontSize: 16,
+                    //     color: AppColors.colorBlack,
+                    //   ),
+                    // ),
+                    // SearchDropdown(
+                    //   items: isloading ? [] : product,
+                    //   hint: "search Product",
+                    //   onChanged: (e) {
+                    //     selectedProduct = e;
+                    //   },
+                    //   scrollController: productcroll,
+                    //   searchOnchanged: (value) => onSearchProductChanged(value),
+                    // ),
                     Text(
                       'Category',
                       style: TextStyle(

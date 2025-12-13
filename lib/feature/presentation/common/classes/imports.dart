@@ -22,7 +22,6 @@ export 'package:bazrin/feature/presentation/screens/customers/Presentation/Ledge
 export 'package:bazrin/feature/presentation/screens/customers/Presentation/return_due_pay/return_due_pay.dart';
 export 'package:bazrin/feature/presentation/screens/expense/Presentation/Expense/Main/expense_list.dart';
 export 'package:bazrin/feature/presentation/screens/expense/Presentation/Expense/View/expense_view.dart';
-export 'package:bazrin/feature/presentation/screens/expense/Presentation/Expense/filter/filter.dart';
 export 'dart:io';
 export 'dart:async';
 export 'package:image_picker/image_picker.dart';

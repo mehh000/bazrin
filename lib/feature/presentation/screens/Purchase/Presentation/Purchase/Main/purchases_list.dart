@@ -27,7 +27,7 @@ class _PurchasesListState extends State<PurchasesList> {
   String returntypes = '';
   String productId = '';
   String startMonth = '';
-  String endMonth = '';
+  String endMonth = '';  
 
   @override
   void initState() {

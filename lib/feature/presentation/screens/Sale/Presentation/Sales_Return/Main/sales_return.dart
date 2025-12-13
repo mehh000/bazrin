@@ -22,6 +22,13 @@ class _SalesReturnState extends State<SalesReturn> {
   bool isLoadingMore = false;
   bool noMoreData = false;
   bool isloading = false;
+
+  String startMonth = '';
+  String endMonth = '';
+
+  String customerId = '';
+  String saleType = '';
+
   @override
   void initState() {
     // TODO: implement initState
@@ -41,6 +48,9 @@ class _SalesReturnState extends State<SalesReturn> {
     final response = await Getsalereturn.getSaleReturn(
       page,
       searchController.text,
+      customerId,
+      startMonth,
+      endMonth,
     );
     setState(() {
       saleReturns = response['data'];
@@ -94,6 +104,16 @@ class _SalesReturnState extends State<SalesReturn> {
     _debounce = Timer(const Duration(milliseconds: 400), () {
       getSaleReturn();
     });
+  }
+
+  void filterFuntion(filter) {
+    setState(() {
+      customerId = filter['Customer'];
+      startMonth = filter['startMonth'];
+      endMonth = filter['endingMonth'];
+    });
+    getSaleReturn();
+    // PrettyPrint.print(filter);
   }
 
   @override
@@ -183,7 +203,9 @@ class _SalesReturnState extends State<SalesReturn> {
                       FullScreenRightDialog.open(
                         context: context,
                         child: SalesReturnFilter(
-                          filterSubmit: (f) {},
+                          filterSubmit: (f) {
+                            filterFuntion(f);
+                          },
                         ), // your custom widget
                       );
                     },

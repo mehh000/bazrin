@@ -1,7 +1,9 @@
 import 'package:bazrin/feature/data/API/Helper/Accounts/getaccountList.dart';
+import 'package:bazrin/feature/data/API/Helper/Customer/getCustomers.dart';
 import 'package:bazrin/feature/data/API/Helper/Supplier/getSuppliers.dart';
 import 'package:bazrin/feature/presentation/common/Components/customdropdown.dart';
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
+import 'package:intl/intl.dart';
 
 class SalesReturnFilter extends StatefulWidget {
   final Function filterSubmit;
@@ -12,123 +14,80 @@ class SalesReturnFilter extends StatefulWidget {
 }
 
 class _SalesReturnFilterState extends State<SalesReturnFilter> {
-  List<Map<String, dynamic>> accountList = [];
-  List<Map<String, dynamic>> suppliers = [];
-  final ScrollController accountScroll = ScrollController();
-  final ScrollController supplierScroll = ScrollController();
+  List<Map<String, dynamic>> customer = [];
+
+  final ScrollController customercroll = ScrollController();
   TextEditingController invoiceNumber = TextEditingController();
 
-  int accountPage = 0;
-  int supplierPage = 0;
+  TextEditingController searchController = TextEditingController();
 
-  bool isLoadingMoreForAccount = false;
-  bool isLoadingMoreForSupplier = false;
-  bool noMoreDataForAccount = false;
-  bool noMoreDataForSupplier = false;
+  int customerPage = 0;
+
+  bool isLoadingMoreForCustomer = false;
+
+  bool noMoreDataForCustomer = false;
   bool isloading = false;
 
-  dynamic selectedAccount = {};
-  dynamic selectedSupplier = {};
+  dynamic selectedCustomer = {};
+
+  DateTime? staringDate;
+  DateTime? endingDate;
+
+  String selectedSaleType = '';
+
+  Timer? _debounce;
 
   @override
   void initState() {
     super.initState();
-    accountScroll.addListener(() {
-      if (accountScroll.position.pixels ==
-          accountScroll.position.maxScrollExtent) {
-        loadMore();
+
+    customercroll.addListener(() {
+      if (customercroll.position.pixels ==
+          customercroll.position.maxScrollExtent) {
+        loadMoreCustomer();
       }
     });
-    supplierScroll.addListener(() {
-      if (supplierScroll.position.pixels ==
-          supplierScroll.position.maxScrollExtent) {
-        loadMoreSupplier();
-      }
-    });
-    getSupplie();
-    getacconts();
+    getCustomer();
   }
 
-  TextEditingController searchController = TextEditingController();
-
-  Future<void> getacconts() async {
-    accountPage = 0;
-    noMoreDataForAccount = false;
-    try {
-      final response = await Getaccountlist.getAccountsList(accountPage);
-
-      // Safely cast and convert
-      final List<Map<String, dynamic>> parsedList = (response['data'] as List)
-          .map((e) => Map<String, dynamic>.from(e))
-          .toList();
-
-      setState(() {
-        accountList = parsedList;
-      });
-
-      // print('accounts data : $accountList');
-    } catch (e) {
-      // print('Error loading categories: $e');
-    }
-  }
-
-  Future<void> loadMore() async {
-    if (isLoadingMoreForAccount || noMoreDataForAccount) return;
-
-    isLoadingMoreForAccount = true;
-    accountPage++;
-
-    final response = await Getaccountlist.getAccountsList(accountPage);
-
-    int totalPage = response["totalPage"];
-    List<dynamic> newData = response["data"];
-
-    if (newData.isEmpty || accountPage >= totalPage) {
-      noMoreDataForAccount = true;
-    }
-
-    // Convert safely
-    final List<Map<String, dynamic>> parsedNew =
-        List<Map<String, dynamic>>.from(newData);
-
-    setState(() {
-      accountList.addAll(parsedNew);
-    });
-    print('Account scroll triggered');
-
-    isLoadingMoreForAccount = false;
-  }
-
-  void getSupplie() async {
-    supplierPage = 0;
-    noMoreDataForSupplier = false;
+  void getCustomer() async {
+    customerPage = 0;
+    noMoreDataForCustomer = false;
     setState(() => isloading = true);
 
-    final res = await Getsuppliers.getSuppliersList(supplierPage);
+    final res = await Getcustomers.getCustomersList(
+      customerPage,
+      searchController.text,
+    );
 
     // FIX: force convert dynamic list → List<Map<String, dynamic>>
-    final List<Map<String, dynamic>> parsedSuppliers =
+    final List<Map<String, dynamic>> parsedcustomer =
         List<Map<String, dynamic>>.from(res['data'] ?? []);
 
     setState(() {
-      suppliers = [...suppliers, ...parsedSuppliers];
+      if (customerPage == 0) {
+        customer = parsedcustomer;
+      } else {
+        customer = [...customer, ...parsedcustomer];
+      }
+
       isloading = false;
     });
   }
 
-  Future<void> loadMoreSupplier() async {
-    if (isLoadingMoreForSupplier || noMoreDataForSupplier) return;
+  Future<void> loadMoreCustomer() async {
+    if (isLoadingMoreForCustomer || noMoreDataForCustomer) return;
 
-    isLoadingMoreForSupplier = true;
-    supplierPage++;
+    isLoadingMoreForCustomer = true;
+    customerPage++;
 
-    final response = await Getsuppliers.getSuppliersList(supplierPage);
+    final response = await Getcustomers.getCustomersList(customerPage);
 
     int totalPage = response["totalPage"];
     List<dynamic> newData = response["data"];
 
-    if (newData.isEmpty || supplierPage >= totalPage) {
-      noMoreDataForSupplier = true;
+    if (newData.isEmpty || customerPage >= totalPage) {
+      noMoreDataForCustomer = true;
     }
 
     // Convert safely
@@ -136,23 +95,42 @@ class _SalesReturnFilterState extends State<SalesReturnFilter> {
         List<Map<String, dynamic>>.from(newData);
 
     setState(() {
-      suppliers = [...suppliers, ...parsedNew];
+      customer = [...customer, ...parsedNew];
     });
 
-    print('supplier scroll triggered $parsedNew');
+    print('Customer scroll triggered $parsedNew');
 
-    isLoadingMoreForSupplier = false;
+    isLoadingMoreForCustomer = false;
   }
 
   void submitFilter() {
     dynamic filterData = {
-      "invoiceNumber": invoiceNumber.text,
-      "account": selectedAccount,
-      "supplier": selectedSupplier,
+      "Customer": selectedCustomer['id'],
+      "startMonth": staringDate == null
+          ? ''
+          : DateFormat(
+              'yyyy/MM/dd',
+            ).format(DateTime.parse(staringDate.toString())),
+      "endingMonth": endingDate == null
+          ? ''
+          : DateFormat(
+              'yyyy/MM/dd',
+            ).format(DateTime.parse(endingDate.toString())),
     };
     widget.filterSubmit(filterData);
     Navigator.of(context).pop();
     // PrettyPrint.print(filterData);
+  }
+
+  void onSearchChanged(String value) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    setState(() {
+      searchController.text = value;
+    });
+
+    _debounce = Timer(const Duration(milliseconds: 400), () {
+      getCustomer();
+    });
   }
 
   @override
@@ -181,16 +159,42 @@ class _SalesReturnFilterState extends State<SalesReturnFilter> {
                   spacing: 13,
                   children: [
                     SizedBox(height: 20),
-                    InputComponent(
-                      preicon: true,
-                      hintitle: 'Search invoice number',
-                      islabel: true,
-                      label: "Invoice Number",
-                      spcae: 12,
-                      controller: invoiceNumber,
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Expanded(
+                          child: DatePicker(
+                            onDateSelected: (date) {
+                              setState(() {
+                                staringDate = date;
+                              });
+                            },
+                          ),
+                        ),
+                        Container(
+                          width: 40,
+                          height: 48,
+                          decoration: BoxDecoration(
+                            color: AppColors.Colorprimary,
+                          ),
+                          child: Center(
+                            child: Image.asset('assets/images/arrowupdown.png'),
+                          ),
+                        ),
+                        Expanded(
+                          child: DatePicker(
+                            onDateSelected: (date) {
+                              setState(() {
+                                endingDate = date;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
                     ),
+
                     Text(
-                      'Account',
+                      'Customer',
                       style: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 16,
@@ -198,32 +202,14 @@ class _SalesReturnFilterState extends State<SalesReturnFilter> {
                       ),
                     ),
                     SearchDropdown(
-                      items: accountList,
-                      getter: "type",
-                      hint: "search Account",
+                      textController: searchController,
+                      searchOnchanged: (value) => onSearchChanged(value),
+                      items: isloading ? [] : customer,
+                      hint: "search Customer",
                       onChanged: (e) {
-                        setState(() {
-                          selectedAccount = e;
-                        });
-                        // PrettyPrint.print(e);
+                        selectedCustomer = e;
                       },
-                      scrollController: accountScroll,
-                    ),
-                    Text(
-                      'Supplier',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16,
-                        color: AppColors.colorBlack,
-                      ),
-                    ),
-                    SearchDropdown(
-                      items: isloading ? [] : suppliers,
-                      hint: "search Supplier",
-                      onChanged: (e) {
-                        selectedSupplier = e;
-                      },
-                      scrollController: supplierScroll,
+                      scrollController: customercroll,
                     ),
                   ],
                 ),

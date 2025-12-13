@@ -3,6 +3,7 @@ import 'package:bazrin/feature/data/API/Helper/Expense/getExpenseList.dart';
 import 'package:bazrin/feature/presentation/common/Components/pagination.dart';
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
 import 'package:bazrin/feature/presentation/screens/expense/Components/expense.dart';
+import 'package:bazrin/feature/presentation/screens/expense/Presentation/Expense/Filter/filter.dart';
 
 class ExpenseList extends StatefulWidget {
   const ExpenseList({super.key});
@@ -20,6 +21,11 @@ class _ExpenseListState extends State<ExpenseList> {
   bool noMoreData = false;
   bool isloading = false;
   int totalPage = 0;
+
+  String expenseCategoryId = '';
+  String expenseProductId = '';
+  String startMonth = '';
+  String endMonth = '';
 
   @override
   void initState() {
@@ -41,7 +47,13 @@ class _ExpenseListState extends State<ExpenseList> {
       isloading = true;
     });
     try {
-      final response = await GetexpenseList.getExpenseList(page);
+      final response = await GetexpenseList.getExpenseList(
+        page,
+        expenseProductId,
+        expenseCategoryId,
+        startMonth,
+        endMonth,
+      );
 
       setState(() {
         expense_data_list = response['data'];
@@ -104,6 +116,17 @@ class _ExpenseListState extends State<ExpenseList> {
     }
   }
 
+  void filterFuntion(filter) {
+    setState(() {
+      expenseCategoryId = filter['ExpenseCategory'];
+      expenseProductId = filter['expenseProduct'];
+      startMonth = filter['startMonth'];
+      endMonth = filter['endingMonth'];
+    });
+    getExpenseList();
+    // PrettyPrint.print(filter);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -143,18 +166,20 @@ class _ExpenseListState extends State<ExpenseList> {
             Padding(
               padding: EdgeInsets.only(right: 10),
               child: GestureDetector(
-                // onTap: () {
-                //   Navigator.of(context).push(
-                //     SlidePageRoute(
-                //       page: Filter(),
-                //       direction: SlideDirection.right,
-                //     ),
-                //   );
-                // },
+                onTap: () {
+                  FullScreenRightDialog.open(
+                    context: context,
+                    child: ExpenseFilter(
+                      filterSubmit: (f) {
+                        filterFuntion(f);
+                      },
+                    ), // your custom widget
+                  );
+                },
                 child: SvgPicture.asset(
                   'assets/images/icons/filter.svg',
-                  height: 24,
-                  width: 20,
+                  height: 28,
+                  width: 24,
                   color: Colors.white,
                 ),
               ),
