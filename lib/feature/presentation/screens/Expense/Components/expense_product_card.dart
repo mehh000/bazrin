@@ -1,28 +1,27 @@
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
 import 'package:bazrin/feature/presentation/common/Components/deleteDialog.dart';
-import 'package:bazrin/feature/presentation/screens/Sale/Presentation/SaleReturnTypes/Edit/edit_sale_return_type.dart';
 import 'package:bazrin/feature/presentation/screens/Expense/Presentation/Products/Edit/edit_expense_product.dart';
 
-class SaleReturnTypeCard extends StatefulWidget {
+class ExpenseProductCard extends StatefulWidget {
   final dynamic pro;
   final Function delete;
-  const SaleReturnTypeCard({
+  const ExpenseProductCard({
     super.key,
     required this.pro,
     required this.delete,
   });
 
   @override
-  State<SaleReturnTypeCard> createState() => _SaleReturnTypeCardState();
+  State<ExpenseProductCard> createState() => _ExpenseProductCardState();
 }
 
-class _SaleReturnTypeCardState extends State<SaleReturnTypeCard> {
+class _ExpenseProductCardState extends State<ExpenseProductCard> {
   void onDelete() {
     showDialog<String>(
       context: context,
       builder: (BuildContext context) => Dialog(
         child: Deletedialog(
-          title: "Sale Return Type",
+          title: "Product",
           deleteFuntion: () => widget.delete(widget.delete(widget.pro['id'])),
         ),
       ),
@@ -69,7 +68,9 @@ class _SaleReturnTypeCardState extends State<SaleReturnTypeCard> {
                     style: TextStyle(fontSize: 14, color: Color(0xFF616161)),
                   ),
                   StatusContainer(
-                    bgColor: Colors.transparent,
+                    bgColor: widget.pro['status'] == 'ACTIVE'
+                        ? Colors.green
+                        : Colors.redAccent,
                     text: "${widget.pro['status']}",
                   ),
                 ],
@@ -92,7 +93,7 @@ class _SaleReturnTypeCardState extends State<SaleReturnTypeCard> {
                 onTap: () {
                   Navigator.of(context).push(
                     SlidePageRoute(
-                      page: EditSaleReturnType(data: widget.pro),
+                      page: EditExpenseProduct(proData: widget.pro),
                       direction: SlideDirection.right,
                     ),
                   );

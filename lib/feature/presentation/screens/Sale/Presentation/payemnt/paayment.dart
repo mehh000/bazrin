@@ -1,15 +1,11 @@
-import 'dart:ffi';
-
 import 'package:bazrin/feature/data/API/Helper/Customer/getCustomers.dart';
+import 'package:bazrin/feature/presentation/common/Components/customdropdown.dart';
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
-import 'package:bazrin/feature/presentation/common/classes/prettyPrint.dart';
 import 'package:bazrin/feature/presentation/common/Components/iconEvButton.dart';
-import 'package:bazrin/feature/presentation/common/Components/search_dropdown.dart';
 import 'package:bazrin/feature/presentation/screens/Sale/Presentation/checkout/check_out.dart';
 import 'package:bazrin/feature/presentation/screens/Sale/Presentation/payemnt/widgets/item_card.dart';
 import 'package:bazrin/feature/presentation/screens/Sale/Presentation/payemnt/widgets/last_action_buttons.dart';
-import 'package:bazrin/feature/presentation/screens/customers/Presentation/Customer/Add/add_customer.dart';
-import 'package:flutter/material.dart';
+import 'package:bazrin/feature/presentation/screens/Customers/Presentation/Customer/Add/add_customer.dart';
 
 class Paayment extends StatefulWidget {
   final dynamic selectedItems;
@@ -22,23 +18,39 @@ class Paayment extends StatefulWidget {
 class _PaaymentState extends State<Paayment> {
   dynamic selectedItems = [];
   dynamic grandTotal = 00;
-  dynamic customerList = [];
+  List<Map<String, dynamic>> customer = [];
   dynamic selectedCustomer = {};
   String discountType = '';
   double discount = 0;
   bool iscustomerLoaded = false;
   double originalTotal = 0;
+  Timer? _debounce;
+  int page = 0;
+  bool isLoadingMore = false;
+  bool noMoreData = false;
 
   // Inout Controllers
   TextEditingController dropDownController = TextEditingController();
   TextEditingController discountController = TextEditingController();
   TextEditingController deliveryChangeController = TextEditingController();
   TextEditingController vatController = TextEditingController();
+  TextEditingController searchController = TextEditingController();
+
+  ScrollController scrollController = ScrollController();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    scrollController.addListener(() {
+      if (scrollController.position.pixels ==
+          scrollController.position.maxScrollExtent) {
+        loadMore();
+      }
+    });
     getCustomerList();
+
     setState(() {
       selectedItems = widget.selectedItems;
     });
@@ -160,14 +172,21 @@ class _PaaymentState extends State<Paayment> {
   }
 
   void getCustomerList() async {
+    page = 0;
+    noMoreData = false;
+
     setState(() => iscustomerLoaded = true);
-    final response = await Getcustomers.getCustomersList();
+
+    final response = await Getcustomers.getCustomersList(
+      page,
+      searchController.text,
+    );
 
     final List<Map<String, dynamic>> parsedList =
-        List<Map<String, dynamic>>.from(response);
+        List<Map<String, dynamic>>.from(response['data'] ?? []);
 
     setState(() {
-      customerList = parsedList;
+      customer = parsedList; // 🔥 REPLACE, NOT APPEND
       iscustomerLoaded = false;
     });
   }
@@ -190,6 +209,47 @@ class _PaaymentState extends State<Paayment> {
         direction: SlideDirection.right,
       ),
     );
+  }
+
+  void onSearchChanged(String value) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    setState(() {
+      searchController.text = value;
+    });
+
+    _debounce = Timer(const Duration(milliseconds: 400), () {
+      getCustomerList();
+    });
+  }
+
+  Future<void> loadMore() async {
+    if (isLoadingMore || noMoreData) return;
+
+    isLoadingMore = true;
+    page++;
+
+    final response = await Getcustomers.getCustomersList(page);
+
+    int totalPage = response["totalPage"] ?? 0;
+
+    // SAFELY read API list
+    final List<dynamic> rawData = response["data"] ?? [];
+
+    // Convert to correct type
+    final List<Map<String, dynamic>> newData = rawData
+        .cast<Map<String, dynamic>>();
+
+    if (newData.isEmpty || page >= totalPage) {
+      noMoreData = true;
+    }
+
+    print('Customers: $newData');
+
+    setState(() {
+      customer = [...customer, ...newData];
+    });
+
+    isLoadingMore = false;
   }
 
   @override
@@ -228,20 +288,20 @@ class _PaaymentState extends State<Paayment> {
                   // Search bar
                   Expanded(
                     child: Container(
-                      height: 50,
+                      height: 48,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: MySearchDropdown(
-                        hint: "Select Customer",
-                        items: iscustomerLoaded ? [] : customerList,
+                      child: SearchDropdown(
+                        textController: searchController,
+                        searchOnchanged: (value) => onSearchChanged(value),
+                        items: customer ?? [],
+                        hint: "search Customer",
                         onChanged: (e) {
-                          setState(() {
-                            selectedCustomer = e;
-                          });
+                          selectedCustomer = e;
                         },
-                        dropDownSearchController: dropDownController,
+                        scrollController: scrollController,
                       ),
                     ),
                   ),

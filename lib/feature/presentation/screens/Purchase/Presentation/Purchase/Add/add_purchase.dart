@@ -8,7 +8,7 @@ import 'package:bazrin/feature/presentation/common/Components/search_dropdown.da
 import 'package:bazrin/feature/presentation/common/Components/simple_input.dart';
 import 'package:bazrin/feature/presentation/screens/Purchase/Presentation/Purchase/Add/widget/purchase_add_model.dart';
 import 'package:bazrin/feature/presentation/screens/Purchase/Components/selected_product_card.dart';
-import 'package:bazrin/feature/presentation/screens/expense/Presentation/Expense/Add/Components/selected_product_card.dart';
+import 'package:bazrin/feature/presentation/screens/Expense/Presentation/Expense/Add/Components/selected_product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:vsc_quill_delta_to_html/vsc_quill_delta_to_html.dart';
 

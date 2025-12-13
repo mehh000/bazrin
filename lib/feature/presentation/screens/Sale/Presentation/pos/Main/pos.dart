@@ -1,6 +1,5 @@
 import 'package:bazrin/feature/data/API/Helper/Pos/Sale/getPosProductList.dart';
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
-import 'package:bazrin/feature/presentation/common/classes/prettyPrint.dart';
 import 'package:bazrin/feature/presentation/screens/Sale/Presentation/pos/Filter/filter.dart';
 import 'package:bazrin/feature/presentation/screens/Sale/Presentation/pos/Main/Components/pos_drawer.dart';
 import 'package:bazrin/feature/presentation/screens/Sale/Presentation/pos/widgets/productCard.dart';

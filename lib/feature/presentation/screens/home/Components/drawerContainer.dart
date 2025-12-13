@@ -2,10 +2,10 @@ import 'package:bazrin/feature/data/API/Helper/Profile/getmyprofile.dart';
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
 import 'package:bazrin/feature/presentation/common/classes/prettyPrint.dart';
 import 'package:bazrin/feature/presentation/screens/Promotion/flash_sale_list.dart';
-import 'package:bazrin/feature/presentation/screens/supplier/Presentation/PurchaseDismiss/Main/purchase_dismiss_list.dart';
-import 'package:bazrin/feature/presentation/screens/supplier/Presentation/PurchaseDue/Main/supplier_purchase_due_list.dart';
-import 'package:bazrin/feature/presentation/screens/supplier/Presentation/ReturnDismiss/Main/return_dismiss_list.dart';
-import 'package:bazrin/feature/presentation/screens/supplier/Presentation/ReturnDuePaid/Main/return_due_list.dart';
+import 'package:bazrin/feature/presentation/screens/Supplier/Presentation/PurchaseDismiss/Main/purchase_dismiss_list.dart';
+import 'package:bazrin/feature/presentation/screens/Supplier/Presentation/PurchaseDue/Main/supplier_purchase_due_list.dart';
+import 'package:bazrin/feature/presentation/screens/Supplier/Presentation/ReturnDismiss/Main/return_dismiss_list.dart';
+import 'package:bazrin/feature/presentation/screens/Supplier/Presentation/ReturnDuePaid/Main/return_due_list.dart';
 
 class DrawerContainer extends StatefulWidget {
   final dynamic shop;

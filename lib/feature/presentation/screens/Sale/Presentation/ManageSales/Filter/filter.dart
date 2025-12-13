@@ -12,7 +12,6 @@ class ManageSalesFilter extends StatefulWidget {
 }
 
 class _ManageSalesFilterState extends State<ManageSalesFilter> {
-  
   List<Map<String, dynamic>> customer = [];
 
   final ScrollController customercroll = ScrollController();

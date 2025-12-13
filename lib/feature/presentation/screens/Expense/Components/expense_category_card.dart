@@ -1,36 +1,30 @@
 import 'package:bazrin/feature/presentation/common/classes/imports.dart';
 import 'package:bazrin/feature/presentation/common/Components/deleteDialog.dart';
-import 'package:bazrin/feature/presentation/screens/Sale/Presentation/SaleReturnTypes/Edit/edit_sale_return_type.dart';
-import 'package:bazrin/feature/presentation/screens/Expense/Presentation/Products/Edit/edit_expense_product.dart';
+import 'package:bazrin/feature/presentation/screens/Expense/Presentation/Categoris/Edit/edit_expense_category.dart';
 
-class SaleReturnTypeCard extends StatefulWidget {
-  final dynamic pro;
+class ExpenseCategoryCard extends StatelessWidget {
+  final dynamic cat;
   final Function delete;
-  const SaleReturnTypeCard({
+  const ExpenseCategoryCard({
     super.key,
-    required this.pro,
+    required this.cat,
     required this.delete,
   });
 
   @override
-  State<SaleReturnTypeCard> createState() => _SaleReturnTypeCardState();
-}
-
-class _SaleReturnTypeCardState extends State<SaleReturnTypeCard> {
-  void onDelete() {
-    showDialog<String>(
-      context: context,
-      builder: (BuildContext context) => Dialog(
-        child: Deletedialog(
-          title: "Sale Return Type",
-          deleteFuntion: () => widget.delete(widget.delete(widget.pro['id'])),
-        ),
-      ),
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
+    void onDelete() {
+      showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => Dialog(
+          child: Deletedialog(
+            title: "Category",
+            deleteFuntion: () => delete(delete(cat['id'])),
+          ),
+        ),
+      );
+    }
+
     return Container(
       width: double.infinity,
       height: 90,
@@ -51,17 +45,16 @@ class _SaleReturnTypeCardState extends State<SaleReturnTypeCard> {
                 text: TextSpan(
                   children: [
                     TextSpan(
-                      text: 'Product Name: ',
+                      text: 'Category Name: ',
                       style: TextStyle(fontSize: 14, color: Color(0xFF616161)),
                     ),
                     TextSpan(
-                      text: '${widget.pro['name']}',
+                      text: '${cat['name']}',
                       style: TextStyle(fontSize: 14, color: Colors.black),
                     ),
                   ],
                 ),
               ),
-
               Row(
                 children: [
                   Text(
@@ -69,8 +62,10 @@ class _SaleReturnTypeCardState extends State<SaleReturnTypeCard> {
                     style: TextStyle(fontSize: 14, color: Color(0xFF616161)),
                   ),
                   StatusContainer(
-                    bgColor: Colors.transparent,
-                    text: "${widget.pro['status']}",
+                    bgColor: cat['status'] == 'ACTIVE'
+                        ? Colors.green
+                        : Colors.redAccent,
+                    text: "${cat['status']}",
                   ),
                 ],
               ),
@@ -92,7 +87,7 @@ class _SaleReturnTypeCardState extends State<SaleReturnTypeCard> {
                 onTap: () {
                   Navigator.of(context).push(
                     SlidePageRoute(
-                      page: EditSaleReturnType(data: widget.pro),
+                      page: EditExpenseCategory(catData: cat),
                       direction: SlideDirection.right,
                     ),
                   );

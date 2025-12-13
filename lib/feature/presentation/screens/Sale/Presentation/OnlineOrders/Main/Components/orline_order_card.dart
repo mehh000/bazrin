@@ -4,8 +4,8 @@ import 'package:bazrin/feature/presentation/common/Components/deleteDialog.dart'
 import 'package:bazrin/feature/presentation/screens/Sale/Presentation/ManageSales/SaleReturn/sale_return.dart';
 import 'package:bazrin/feature/presentation/screens/Sale/Presentation/ManageSales/View/manageSell_view.dart';
 import 'package:bazrin/feature/presentation/screens/Sale/Presentation/OnlineOrders/Main/Components/orline_order_dialog.dart';
-import 'package:bazrin/feature/presentation/screens/supplier/Presentation/Supplier/Add/supplier_advance_pay.dart';
-import 'package:bazrin/feature/presentation/screens/supplier/Presentation/Supplier/Edit/edit_supplier.dart';
+import 'package:bazrin/feature/presentation/screens/Supplier/Presentation/Supplier/Add/supplier_advance_pay.dart';
+import 'package:bazrin/feature/presentation/screens/Supplier/Presentation/Supplier/Edit/edit_supplier.dart';
 
 class OrlineOrderCard extends StatefulWidget {
   final dynamic sale;
